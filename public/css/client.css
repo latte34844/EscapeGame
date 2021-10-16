@@ -6,10 +6,73 @@
     padding: 0;
 }
 .container{
-    width: 500px;;
+    width: 500px;
+    text-align: center;
+
 }
 
 .prisonerImg{
     height: 90px;
     width: 90px;
+}
+
+.wardenImg{
+    height: 90px;
+    width: 90px;
+}
+
+.obsatcleImg{
+    height: 90px;
+    width: 90px;
+}
+
+.tunnelImg{
+    height: 90px;
+    width: 90px;
+}
+
+.btnImg{
+    width: 150px;
+    height: 150px;
+}
+
+button {
+    background: none;
+}
+button:hover{
+    background-color: red;
+}
+
+#button{
+    text-align:center;
+    border-width: 0 ; 
+}
+
+#up{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    transform: rotate(90deg);
+}
+
+#down{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    transform: rotate(90deg);
+}
+#left{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+}
+
+#right{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
 }
