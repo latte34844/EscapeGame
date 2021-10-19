@@ -54,7 +54,14 @@ io.on('connection', (socket: socketIO.Socket) => {
             io.to(room).emit('wPosition',wPosition);
             io.to(room).emit('tPosition',tPosition);
             io.to(room).emit('oPositions',oPositions);
+            io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
+            io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+            console.log('send direction')
         }        
+    })
+
+    socket.on('disconnect', () => {
+        console.log('disconnect: ', socket.id)
     })
 
     socket.on('movePosition', (controller:string) =>{
@@ -68,7 +75,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             // const checkWin = game.checkCatch(user)
             io.to(user.userRoom).emit('wPosition', position)
         }
-        
+        io.to(user.userId).emit('direction', game.getAvailableDirection(user))
     })
 });
 

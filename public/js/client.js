@@ -3,8 +3,8 @@ const params = new URLSearchParams(window.location.search)
 
 for(const control of document.querySelectorAll(".control")){
     control.addEventListener("click", function(){
-        handleClick(this.getAttribute('id'));
-    });
+        handleClick(this.getAttribute('id'))
+    })
 }
 
 const handleClick = (controller)=>{
@@ -17,6 +17,7 @@ socket.emit('joinRoom' , params.get('user'),params.get('room'));
 socket.on('pPosition', position =>{
     setPposition(position)
 });
+
 socket.on('wPosition', position =>{
     setWposition(position)
 })
@@ -31,12 +32,33 @@ socket.on('greeting', greeting =>{
         alert('the room is full')
     }else{
         alert('Your role is '+ greeting)
-    }    
+        console.log('role:', greeting)
+    }
+    
 })
+socket.on('direction', direction => {
+    console.log('recieve direction')
+    if (direction.right) show('right');
+    else hide('right');
+    if (direction.down) show('down');
+    else hide('down');
+    if (direction.up) show('up');
+    else hide('up');
+    if (direction.left) show('left');
+    else hide('left');
+})
+
+function hide(id) {
+    document.getElementById(id).style.visibility = "hidden";
+}
+
+function show(id) {
+    document.getElementById(id).style.visibility = "visible";
+}
 
 const setPposition = (position) =>{
     const pastXY = document.querySelector(".ppresentXY");
-    if(!(pastXY === null)){
+    if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('ppresentXY');
     }
@@ -48,7 +70,7 @@ const setPposition = (position) =>{
 
 const setWposition = (position) =>{
     const pastXY = document.querySelector(".wpresentXY");
-    if(!(pastXY === null)){
+    if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('wpresentXY');
     }
@@ -74,6 +96,3 @@ const setTposition = (position) =>{
     xy.innerHTML='<img class="tunnelImg" src="../images/tunnel.png">';
     console.log('tunnel position', xy);
 }
-
-
-

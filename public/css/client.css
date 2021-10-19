@@ -55,6 +55,7 @@ button:hover{
     width: 150px;
     height: 150px;
     transform: rotate(90deg);
+    visibility: visible;
 }
 
 #down{
@@ -63,12 +64,14 @@ button:hover{
     width: 150px;
     height: 150px;
     transform: rotate(90deg);
+    visibility: visible;
 }
 #left{
     border-width: 0; 
     padding: 0;
     width: 150px;
     height: 150px;
+    visibility: visible;
 }
 
 #right{
@@ -76,4 +79,5 @@ button:hover{
     padding: 0;
     width: 150px;
     height: 150px;
+    visibility: visible;
 }

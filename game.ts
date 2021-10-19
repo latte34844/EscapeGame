@@ -1,4 +1,4 @@
-import {User, Room} from './interface'
+import {User, Direction} from './interface'
 
 export class Game {
     users: User[]
@@ -149,7 +149,7 @@ export class Game {
     }
 
     //check that can move or not
-    checkMove(user:User,direction: string) {
+    checkMove(user:User,direction: string): boolean {
         let position = user.userPosition
         let room = user.userRoom
         let x = +position.split('')[1]
@@ -170,10 +170,29 @@ export class Game {
                 break
             default: pos=""
         }
+        let _x = +pos.split('')[1]
+        let _y = +pos.split('')[3]
+        if (_x <= 0 || _x > 5 || _y <= 0 || _y > 5) return false
         if (this.isWarden(user) && pos === this.rooms[room].tunnel) return false
-        if (pos in this.rooms[room].notFree) return false 
+        if (this.rooms[room].obstacle.includes(pos)) return false 
         return true
         
+    }
+
+    getAvailableDirection(user: User):Direction{
+        return { 
+        right: this.checkMove(user, 'right'),
+        up: this.checkMove(user, 'up'),
+        down:this.checkMove(user, 'down'), 
+        left: this.checkMove(user, 'left')
+        }
+    }
+
+    getWarden(room: string) {
+        return this.rooms[room]['warden']
+    }
+    getPrisoner(room: string) {
+        return this.rooms[room]['prisoner']
     }
     //check that prisoner arrive tunnel or not
     checkTunnel(user:User){

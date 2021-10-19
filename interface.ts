@@ -13,3 +13,10 @@ export interface Room {
     warden: string
     prisoner: string
 }
+
+export interface Direction {
+    right: boolean 
+    left: boolean 
+    up: boolean 
+    down: boolean
+}
