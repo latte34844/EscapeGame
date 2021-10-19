@@ -1,8 +1,8 @@
 const socket = io();
 const params = new URLSearchParams(window.location.search)
 
-for(var i = 0; i < document.querySelectorAll(".control").length; i++){
-    document.querySelectorAll(".control")[i].addEventListener("click", function(){
+for(const control of document.querySelectorAll(".control")){
+    control.addEventListener("click", function(){
         handleClick(this.getAttribute('id'));
     });
 }
@@ -17,7 +17,6 @@ socket.emit('joinRoom' , params.get('user'),params.get('room'));
 socket.on('pPosition', position =>{
     setPposition(position)
 });
-
 socket.on('wPosition', position =>{
     setWposition(position)
 })
@@ -32,8 +31,7 @@ socket.on('greeting', greeting =>{
         alert('the room is full')
     }else{
         alert('Your role is '+ greeting)
-    }
-    
+    }    
 })
 
 const setPposition = (position) =>{
@@ -76,5 +74,6 @@ const setTposition = (position) =>{
     xy.innerHTML='<img class="tunnelImg" src="../images/tunnel.png">';
     console.log('tunnel position', xy);
 }
+
 
 

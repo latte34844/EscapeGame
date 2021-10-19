@@ -2,9 +2,10 @@
 import path from 'path'
 import http, { Server } from 'http'
 import express, {Request,Response} from 'express'
-import * as socketio from 'socket.io'
+import socketIO from 'socket.io'
 import bodyParser from 'body-parser'
 import { Game } from './game'
+import { createLogicalNot } from 'typescript'
 
 const app = express();
 const server = http.createServer(app);
@@ -14,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req:Request,res:Response)=>{
-    res.sendFile(__dirname+"/public/login.html")
+    res.sendFile(__dirname+ "/public/login.html")
 });
 
 app.post('/client', (req:Request,res:Response)=>{
@@ -27,17 +28,15 @@ app.get('/client', (req:Request,res:Response)=>{
 })
 
 const game = new Game()
-io.on('connection', (socket:any) => {
-    socket.on('joinRoom', (user:string,room:string) =>{
+io.on('connection', (socket: socketIO.Socket) => {
+    console.log("connect: " + socket.id)
+    socket.on('joinRoom', (userName:string,room:string) =>{
         socket.join(room)
-        console.log('Client Join');
-        console.log(user)
-        console.log(socket.id);
-        console.log(room)
-        const greeting = game.join(user,socket.id,room)
-
+        console.log(`Client Join\nsocket: ${socket.id}\nuser: ${userName}\nroom: ${room}`);
+        const greeting = game.join(userName,socket.id,room)
+        const user = game.fetchUser(socket.id)
         socket.emit('greeting',greeting)
-        if(game.isRoomFull(room)){
+        if(game.isRoomFull(room) && (user.userRole==='prisoner'|| user.userRole==='warden')){
             const prisoner = game.fetchUser(game.rooms[room].prisoner.userId)
             const warden = game.fetchUser(game.rooms[room].warden.userId)
             const oPositions = game.createRoomObstacle(room)
@@ -45,7 +44,6 @@ io.on('connection', (socket:any) => {
             let pPosition = "x0y0"
             let wPosition = "x0y0"
             while(true){
-                
                 pPosition = game.createUserPosition(prisoner);
                 wPosition = game.createUserPosition(warden);
                 if(pPosition != wPosition){

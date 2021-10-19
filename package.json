@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently -k \"ts-node -p app.ts -w\""
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +18,9 @@
     "express": "^4.17.1",
     "socket.io": "^4.2.0",
     "typescript": "^4.4.4"
+  },
+  "devDependencies": {
+    "concurrently": "^6.3.0",
+    "ts-node": "^10.3.0"
   }
 }

@@ -1,17 +1,16 @@
-import {User} from './interface'
-
+import {User, Room} from './interface'
 
 export class Game {
     users: User[]
     rooms: any
     constructor(){
-        this.rooms = {}
+        this.rooms = []
         this.users = []
     }
 
     join(userName:string,id:string,room:string){
         if(!this.rooms[room]){
-            this.rooms[room]={}
+            this.rooms[room]= {}
             console.log('create new room')
         }
         if(this.rooms[room]['warden'] && this.rooms[room]['prisoner']){
@@ -114,26 +113,26 @@ export class Game {
         console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
         switch (controller){
             case "up":
-                // if(this.checkMove(user,controller)){
+                if (this.checkMove(user,controller)){
                     y = +y + 1
-                    break
-                // }
+                }
+                break
                 
             case "down":
-                // if(this.checkMove(user,controller)){
+                if( this.checkMove(user,controller)){
                     y = +y - 1
-                    break
-                // }
+                }
+                break
             case "left":
-                // if(this.checkMove(user,controller)){
+                if(this.checkMove(user,controller)){
                 x = +x - 1
+                }
                 break
-                // }
             case "right":
-                // if(this.checkMove(user,controller)){
+                if(this.checkMove(user,controller)){
                 x = +x + 1
+                }
                 break
-                // }
         }
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
@@ -141,12 +140,45 @@ export class Game {
         return position
     }
 
-    checkMove(user:User,direction: string) {
-        //check that can move or not
+    isWarden(user: User){
+        return user.userRole === "warden"
     }
 
+    isPrisoner(user: User){
+        return user.userRole === "prisoner"
+    }
+
+    //check that can move or not
+    checkMove(user:User,direction: string) {
+        let position = user.userPosition
+        let room = user.userRoom
+        let x = +position.split('')[1]
+        let y = +position.split('')[3]
+        let pos: string
+        switch (direction){
+            case "up":
+                pos = `x${x}y${y+1}`  
+                break 
+            case "down":
+                pos = `x${x}y${y-1}`  
+                break
+            case "left":
+                pos = `x${x-1}y${y}`
+                break
+            case "right":
+                pos = `x${x+1}y${y}`
+                break
+            default: pos=""
+        }
+        if (this.isWarden(user) && pos === this.rooms[room].tunnel) return false
+        if (pos in this.rooms[room].notFree) return false 
+        return true
+        
+    }
+    //check that prisoner arrive tunnel or not
     checkTunnel(user:User){
-        //check that prisoner arrive tunnel or not
+        return user.userPosition === this.rooms[user.userRoom].tunnel
+    
     }
 
     checkCatch(user:User){

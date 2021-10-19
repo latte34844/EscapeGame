@@ -5,3 +5,11 @@ export interface User{
     userRoom: string, 
     userPosition: string
 }
+
+export interface Room {
+    obstacle: string[]
+    notFree: string[]
+    tunnel: string
+    warden: string
+    prisoner: string
+}
