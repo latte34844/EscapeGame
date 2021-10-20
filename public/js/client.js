@@ -96,3 +96,19 @@ const setTposition = (position) =>{
     xy.innerHTML='<img class="tunnelImg" src="../images/tunnel.png">';
     console.log('tunnel position', xy);
 }
+
+window.addEventListener('keydown', (e) => {
+    var key = e.keyCode;
+    //down
+    if (key == 40 || key == 83) console.log('down')
+    //up 
+    if (key == 38 || key == 87) console.log('up')
+    //left
+    if (key == 37 || key == 65) console.log('left')
+    //right
+    if (key == 39 || key == 68) console.log('right')
+    //enter 
+    if (key == 13) console.log('enter')
+    //esc 
+    if (key == 27) console.log('escape')
+}, true)

@@ -5,20 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Document</title>
+    <title>Escape Game</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 </head>
 <body>
-    
+    <h1>PLAY <strong>ESCAPE PLAN</strong></h1>
+    <br><hr><br>
+    <div>
+        <form action="/client" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username">
+            <label for="room">Room</label>
+            <input type="text" name="room">
+            <button class="btn-danger btn-lg" type="submit">Submit</button>
+        </form>
+    </div>
 </body>
 </html>
-<h1>PLAY ESCAPE PLAN</h1>
-
-<form action="/client" method="POST">
-    <label for="username">Username</label>
-    <input type="text" name="username">
-    <label for="room">Room</label>
-    <input type="text" name="room">
-    <button class="btn-danger btn-lg" type="submit">Submit</button>
-</form>
