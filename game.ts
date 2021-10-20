@@ -48,7 +48,7 @@ export class Game {
         }else if(role === 'warden'){
             return 'prisoner'
         }
-        return role
+        return 'role'
     }
     
     isRoomFull(room:string){

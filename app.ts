@@ -62,6 +62,7 @@ io.on('connection', (socket: socketIO.Socket) => {
 
     socket.on('disconnect', () => {
         console.log('disconnect: ', socket.id)
+        console.log('hello latte')
     })
 
     socket.on('movePosition', (controller:string) =>{
