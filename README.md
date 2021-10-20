@@ -1,3 +1,3 @@
 # EscapeGame
-start server: node app.js  
+start server: ts-node app.js  
 at localhost:3000
