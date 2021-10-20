@@ -47,13 +47,16 @@ socket.on('direction', direction => {
     if (direction.left) show('left');
     else hide('left');
 })
-
+const redOpacity = 0.2;
+const incOpacity = 1;
 function hide(id) {
-    document.getElementById(id).style.visibility = "hidden";
+    document.getElementById(id).disabled = true;
+    document.getElementById(id).style.opacity = redOpacity;
 }
 
 function show(id) {
-    document.getElementById(id).style.visibility = "visible";
+    document.getElementById(id).disabled = false;
+    document.getElementById(id).style.opacity = incOpacity;
 }
 
 const setPposition = (position) =>{
