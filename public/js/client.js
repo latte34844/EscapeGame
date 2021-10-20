@@ -14,6 +14,7 @@ const handleClick = (controller)=>{
 
 socket.emit('joinRoom' , params.get('user'),params.get('room'));
 
+
 socket.on('pPosition', position =>{
     setPposition(position)
 });
@@ -28,7 +29,7 @@ socket.on('tPosition', position =>{
     setTposition(position)
 })
 socket.on('greeting', greeting =>{
-    if(greeting === 'the room is full'){
+    if(greeting === 'spectator'){
         alert('the room is full')
     }else{
         alert('Your role is '+ greeting)
@@ -49,11 +50,11 @@ socket.on('direction', direction => {
 })
 
 function hide(id) {
-    document.getElementById(id).style.visibility = "hidden";
+    document.getElementById(id).style.opacity = "0.5";
 }
 
 function show(id) {
-    document.getElementById(id).style.visibility = "visible";
+    document.getElementById(id).style.opacity = "1";
 }
 
 const setPposition = (position) =>{
