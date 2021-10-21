@@ -37,7 +37,6 @@ export class Game {
             userRoom: room, 
             userPosition: 'x6y6'
         })
-
         console.log('create user')
         return role
         
@@ -215,7 +214,6 @@ export class Game {
     //check that prisoner arrive tunnel or not
     checkTunnel(user:User){
         return user.userPosition === this.rooms[user.userRoom].tunnel
-    
     }
 
     checkCatch(user:User){

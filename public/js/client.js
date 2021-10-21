@@ -22,16 +22,21 @@ socket.on('pPosition', position =>{
 socket.on('wPosition', position =>{
     setWposition(position)
 })
+
 socket.on('oPositions', positions =>{
     setOpositions(positions)
 })
+
 socket.on('tPosition', position =>{
     setTposition(position)
 })
+
 socket.on('greeting', greeting =>{
     if(greeting === 'spectator'){
+        //alert with chat box
         alert('the room is full')
     }else{
+        //alert with chat box => wait for another player
         alert('Your role is '+ greeting)
         console.log('role:', greeting)
     }
@@ -48,13 +53,16 @@ socket.on('direction', direction => {
     if (direction.left) show('left');
     else hide('left');
 })
-
+const redOpacity = 0.2;
+const incOpacity = 1;
 function hide(id) {
-    document.getElementById(id).style.opacity = "0.5";
+    document.getElementById(id).disabled = true;
+    document.getElementById(id).style.opacity = redOpacity;
 }
 
 function show(id) {
-    document.getElementById(id).style.opacity = "1";
+    document.getElementById(id).disabled = false;
+    document.getElementById(id).style.opacity = incOpacity;
 }
 
 const setPposition = (position) =>{

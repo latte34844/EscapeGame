@@ -39,16 +39,16 @@ io.on('connection', (socket: socketIO.Socket) => {
         if(game.isRoomFull(room)){ 
             const prisoner = game.fetchUser(game.rooms[room].prisoner.userId)
             const warden = game.fetchUser(game.rooms[room].warden.userId)
-            let pPosition = prisoner.userPosition
-            let wPosition = warden.userPosition
+            let pPosition = prisoner.userPosition //x6y6
+            let wPosition = warden.userPosition //x6y6
             let oPositions:string[] = []
             let tPosition = ''
             if(greeting != 'spectator'){
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
                 while(true){
-                    pPosition = game.createUserPosition(prisoner);
-                    wPosition = game.createUserPosition(warden);
+                    pPosition = game.createUserPosition(prisoner); //x y
+                    wPosition = game.createUserPosition(warden); //x y
                     if(pPosition != wPosition){
                         break
                     }
@@ -58,10 +58,13 @@ io.on('connection', (socket: socketIO.Socket) => {
                 tPosition = game.rooms[room].tunnel
                 game.rooms[room].spectators.forEach((spectator:any) =>{
                     const user = game.fetchUser(spectator.userId)
+                    //io to everyone, who join
                     io.to(user.userId).emit('direction', game.getAvailableDirection(user))
                 })
                 // io.to(room).emit('spectator',userName)
             }
+            //io to p and w , there rolw
+            //io to p and w, who join
             io.to(room).emit('pPosition',pPosition);
             io.to(room).emit('wPosition',wPosition);
             io.to(room).emit('tPosition',tPosition);
