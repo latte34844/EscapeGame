@@ -8,7 +8,7 @@ https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-
 
 clone repo
 ```
-git clone 
+git clone https://github.com/latte34844/EscapeGame.git
 ```
 
 pull changed code to local
