@@ -1,5 +1,5 @@
 # EscapeGame
-start server: ts-node app.js  
+start server: ts-node app.ts  
 at localhost:3000
 
 # git command
