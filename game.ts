@@ -1,4 +1,4 @@
-import {User, Direction} from './interface'
+import {User, Direction, Score} from './interface'
 
 export class Game {
     users: User[]
@@ -192,6 +192,7 @@ export class Game {
         if (_x <= 0 || _x > 5 || _y <= 0 || _y > 5) return false
         if (this.isWarden(user) && pos === this.rooms[room].tunnel) return false
         if (this.rooms[room].obstacle.includes(pos)) return false 
+        if (pos === this.getWarden(room).userPosition) return false
         return true
         
     }
@@ -206,17 +207,65 @@ export class Game {
     }
 
     getWarden(room: string) {
-        return this.rooms[room]['warden']
+        return this.fetchUser(this.rooms[room].warden.userId)
     }
     getPrisoner(room: string) {
-        return this.rooms[room]['prisoner']
+        return this.fetchUser(this.rooms[room].prisoner.userId)
     }
-    //check that prisoner arrive tunnel or not
+    getSpectator(room: string) {
+        return this.rooms[room].spectators
+    }
+
+    setScore(room: string, prisonerScore: number, wardenScore: number) {
+        this.rooms[room].score = {
+            prisonerScore: prisonerScore,
+            wardenScore: wardenScore
+        }
+    }
+
+    getScore(room: string): Score {
+        return this.rooms[room].score
+    }
+
     checkTunnel(user:User){
+        // check that prisoner arrive tunnel or not
+        // assume user is prisoner
         return user.userPosition === this.rooms[user.userRoom].tunnel
+    
     }
 
     checkCatch(user:User){
-      //check that warden catch prisoner or not  
+        // check that warden catch the prisoner or not
+        // assume user is warden
+        return user.userPosition === this.getPrisoner(user.userRoom).userPosition
+    }
+
+    init(room: string, prisoner: User, warden: User) {
+        let oPositions = this.createRoomObstacle(room)
+        let tPosition = this.createTunnel(room)
+        let pPosition = prisoner.userPosition //x6y6
+        let wPosition = warden.userPosition 
+            while(true){
+                pPosition = this.createUserPosition(prisoner); //x y
+                wPosition = this.createUserPosition(warden); //x y
+                if(pPosition != wPosition){
+                    break
+                }
+            }
+        return {oPositions,tPosition, pPosition, wPosition}
+    }
+
+    win(user: User) {
+        let room = user.userRoom
+        let currentScore = this.getScore(room)
+        if (user.userRole === 'warden') {
+            this.setScore(room, currentScore.prisonerScore, currentScore.wardenScore+1)
+        } else {
+            this.setScore(room, currentScore.prisonerScore+1, currentScore.wardenScore)
+        }
+    }
+
+    restartGame(room: string) {
+       return this.init(room, this.getPrisoner(room), this.getWarden(room))
     }
 }

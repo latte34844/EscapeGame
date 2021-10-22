@@ -20,3 +20,9 @@ export interface Direction {
     up: boolean 
     down: boolean
 }
+
+export interface Score {
+    prisonerScore: number
+    wardenScore: number
+}
+
