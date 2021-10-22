@@ -1,12 +1,10 @@
 
 import path from 'path'
-import http, { Server } from 'http'
+import http from 'http'
 import express, {Request,Response} from 'express'
 import socketIO from 'socket.io'
 import bodyParser from 'body-parser'
 import { Game } from './game'
-import { createLogicalNot } from 'typescript'
-import { emit } from 'process'
 
 const app = express();
 const server = http.createServer(app);
@@ -43,6 +41,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             let wPosition = warden.userPosition //x6y6
             let oPositions:string[] = []
             let tPosition = ''
+            game.setScore(room, 0,0)
             if(greeting != 'spectator'){
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
@@ -65,12 +64,18 @@ io.on('connection', (socket: socketIO.Socket) => {
             }
             //io to p and w , there rolw
             //io to p and w, who join
+
+            // emit score
+            io.to(room).emit('score', game.getScore(room))
+
             io.to(room).emit('pPosition',pPosition);
             io.to(room).emit('wPosition',wPosition);
             io.to(room).emit('tPosition',tPosition);
             io.to(room).emit('oPositions',oPositions);
+
             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+
             
             console.log('send direction')
         }       
@@ -81,17 +86,57 @@ io.on('connection', (socket: socketIO.Socket) => {
     })
 
     socket.on('movePosition', (controller:string) =>{
+
         const user = game.fetchUser(socket.id)
         const position = game.movePosition(user,controller)
+        const room = user.userRoom
+
+        let checkWin = false
+
         if(user.userRole === 'prisoner'){
-            // const checkWin = game.checkTunnel(user)
-            io.to(user.userRoom).emit('pPosition', position)
+            checkWin = game.checkTunnel(user)
+            io.to(room).emit('pPosition', position)
         }
         if(user.userRole === 'warden'){
-            // const checkWin = game.checkCatch(user)
-            io.to(user.userRoom).emit('wPosition', position)
+            checkWin = game.checkCatch(user)
+            io.to(room).emit('wPosition', position)
         }
+
         io.to(user.userId).emit('direction', game.getAvailableDirection(user))
+
+        if (checkWin) {
+
+            // TODO
+            // cut scene here
+
+            game.win(user)
+
+            io.to(room).emit('win', `${user.userName} win the game as ${user.userRole}`)
+
+            let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
+
+            let prisoner = game.getPrisoner(room)
+            let warden = game.getWarden(room)
+            let spectators = game.getSpectator(room)
+
+            io.to(room).emit('score', game.getScore(room))
+
+            io.to(room).emit('pPosition',pPosition);
+            io.to(room).emit('wPosition',wPosition);
+            io.to(room).emit('tPosition',tPosition);
+            io.to(room).emit('oPositions',oPositions);
+
+            io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
+            io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+
+            if (spectators) {
+                game.rooms[room].spectators.forEach((spectator:any) =>{
+                    const _spectator = game.fetchUser(spectator.userId)
+                    io.to(_spectator.userId).emit('direction', game.getAvailableDirection(_spectator))
+                })
+            }
+
+        }
     })
 });
 

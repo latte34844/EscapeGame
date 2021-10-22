@@ -12,6 +12,7 @@ export interface Room {
     tunnel: string
     warden: string
     prisoner: string
+    score: Score
 }
 
 export interface Direction {
@@ -19,4 +20,9 @@ export interface Direction {
     left: boolean 
     up: boolean 
     down: boolean
+}
+
+export interface Score {
+    prisonerScore: number
+    wardenScore: number
 }

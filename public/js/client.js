@@ -42,6 +42,15 @@ socket.on('greeting', greeting =>{
     }
     
 })
+
+socket.on('score', score => {
+    console.log(`prisoner: ${score.prisonerScore}\nwarden: ${score.wardenScore}`)
+})
+
+socket.on('win', e => {
+    alert(e)
+})
+
 socket.on('direction', direction => {
     console.log('recieve direction')
     if (direction.right) show('right');
