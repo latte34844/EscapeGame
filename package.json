@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently -k \"ts-node -p app.ts -w\""
+    "dev": "nodemon app.ts"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/socket.io-client": "^1.4.36",
     "concurrently": "^6.3.0",
-    "ts-node": "^10.3.0"
+    "nodemon": "^2.0.14",
+    "ts-node": "^10.3.1"
   }
 }

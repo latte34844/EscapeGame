@@ -115,6 +115,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 game.win(user)
 
                 io.to(room).emit('win', `${user.userName} win the game as ${user.userRole}`)
+                io.to(room).emit('clear', "clear object")
 
                 let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
 

@@ -62,6 +62,11 @@ socket.on('direction', direction => {
     if (direction.left) show('left');
     else hide('left');
 })
+
+socket.on('clear', () => {
+    // TODO
+    // clear object
+})
 const redOpacity = 0.2;
 const incOpacity = 1;
 function hide(id) {

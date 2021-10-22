@@ -118,7 +118,6 @@ export class Game {
 
     fetchUser(id:string){
         let user = this.users.find((u:User) => u.userId === id)
-
         if(user === undefined){
             throw new TypeError('Error On Fetcing User')
         }
@@ -278,7 +277,7 @@ export class Game {
     }
 
     restartGame(room: string) {
-       return this.init(room, this.getPrisoner(room), this.getWarden(room))
+        return this.init(room, this.getPrisoner(room), this.getWarden(room))
     }
 
     delay(ms: number) {
