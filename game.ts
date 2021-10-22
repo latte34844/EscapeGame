@@ -3,39 +3,30 @@ import {User, Direction} from './interface'
 export class Game {
     users: User[]
     rooms: any
-
     constructor(){
-        this.rooms = {}
+        this.rooms = []
         this.users = []
     }
 
     join(userName:string,id:string,room:string){
-
         if(!this.rooms[room]){
             this.rooms[room]= {}
             console.log('create new room')
-        }        
-
-        const role = this.createRole(room)
-        if(role === 'spectator'){
-            if(!this.rooms[room].spectators){
-                this.rooms[room].spectators=[]
-            }  
-            this.rooms[room].spectators.push({
-                userId:id
-            })   
-        }else{
-            this.rooms[room][role]={
-                userId:id
-           }
         }
-         
+        if(this.rooms[room]['warden'] && this.rooms[room]['prisoner']){
+            console.log(`the room ${room} is full`)
+            return 'the room is full'
+        }
+        const role = this.createRole(room)
+         this.rooms[room][role]={
+             userId:id,
+        }
         this.users.push({
             userName: userName,
             userId: id,
             userRole: role,
             userRoom: room, 
-            userPosition: 'x6y6'
+            userPosition: 'x0y0'
         })
         console.log('create user')
         return role
@@ -45,21 +36,19 @@ export class Game {
     createRole(room:string){
         let role = ''
         let random = Math.floor( Math.random() * 2)
-
         if(random === 0){
             role = 'prisoner'
         }else{
             role = 'warden'
         }
-
         if(!this.rooms[room][role]){
             return role
-        }else if(role === 'prisoner' && !this.rooms[room]['warden']){
+        }else if(role === 'prisoner'){
             return 'warden'
-        }else if(role === 'warden' && !this.rooms[room]['prisoner']){
+        }else if(role === 'warden'){
             return 'prisoner'
         }
-        return 'spectator'
+        return role
     }
     
     isRoomFull(room:string){
@@ -69,9 +58,8 @@ export class Game {
     createRoomObstacle(room:string){
         const oPositions:string[] = []
         while(oPositions.length < 5){
-            let x = Math.floor( Math.random() * 5 ) + 1
-            let y = Math.floor( Math.random() * 5 ) + 1
-
+            let x = Math.floor(Math.random() * 5) +1
+            let y = Math.floor(Math.random() * 5) +1
             const oPosition = "x" + x.toString() + "y" + y.toString()
             if(!oPositions.find(o => o === oPosition)){
                 oPositions.push(oPosition)
@@ -85,10 +73,9 @@ export class Game {
 
     createTunnel(room:string){
         while(true){
-            let x = Math.floor( Math.random() * 5 ) + 1
-            let y = Math.floor( Math.random() * 5 ) + 1
+            let x = Math.floor(Math.random() * 5) +1
+            let y = Math.floor(Math.random() * 5) +1
             const tPosition = "x" + x.toString() + "y" + y.toString()
-
             if(!this.rooms[room].notFree.find((nf:string) => nf === tPosition)){
                 console.log('tunnel ',tPosition)
                 this.rooms[room].tunnel= tPosition
@@ -100,10 +87,9 @@ export class Game {
     }
     createUserPosition(user:User){
         while(true){
-            let x = Math.floor( Math.random() * 5 ) + 1;
-            let y = Math.floor( Math.random() * 5 ) + 1;
+            let x = Math.floor(Math.random() * 5) +1;
+            let y = Math.floor(Math.random() * 5) +1;
             const userPosition = "x" + x.toString() + "y" + y.toString()
-
             if(!this.rooms[user.userRoom].notFree.find((nf:string) => nf === userPosition)){
                 user.userPosition = userPosition
                 console.log(this.users)
@@ -114,9 +100,8 @@ export class Game {
 
     fetchUser(id:string){
         let user = this.users.find((u:User) => u.userId === id)
-
         if(user === undefined){
-            throw new TypeError('Error On Fetcing User')
+            throw new TypeError('Error')
         }
         return user
     }
@@ -126,7 +111,6 @@ export class Game {
         let x = +position.split('')[1]
         let y = +position.split('')[3]
         console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
-
         switch (controller){
             case "up":
                 if (this.checkMove(user,controller)){
@@ -150,7 +134,6 @@ export class Game {
                 }
                 break
         }
-
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
         console.log(position)
@@ -211,12 +194,17 @@ export class Game {
     getPrisoner(room: string) {
         return this.rooms[room]['prisoner']
     }
-    //check that prisoner arrive tunnel or not
+
     checkTunnel(user:User){
+        // check that prisoner arrive tunnel or not
+        // assume user is prisoner
         return user.userPosition === this.rooms[user.userRoom].tunnel
+    
     }
 
     checkCatch(user:User){
-      //check that warden catch prisoner or not  
+        // check that warden catch the prisoner or not
+        // assume user is warden
+        return user.userPosition === this.fetchUser(this.rooms[user.userRoom]['prisoner']).userPosition
     }
 }
