@@ -11,7 +11,10 @@ export interface Room {
     notFree: string[]
     tunnel: string
     warden: string
+    player1: User
+    player2: User
     prisoner: string
+    score: Score
 }
 
 export interface Direction {
@@ -22,7 +25,9 @@ export interface Direction {
 }
 
 export interface Score {
-    prisonerScore: number
-    wardenScore: number
+    player1: string
+    player2: string
+    player1Score: number
+    player2Score: number
 }
 

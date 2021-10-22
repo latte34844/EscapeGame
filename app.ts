@@ -105,35 +105,41 @@ io.on('connection', (socket: socketIO.Socket) => {
 
         if (checkWin) {
 
-            // TODO
-            // cut scene here
+            (async () => { 
+        
+                await game.delay(50);
 
-            game.win(user)
+                // TODO
+                // cut scene here
 
-            io.to(room).emit('win', `${user.userName} win the game as ${user.userRole}`)
+                game.win(user)
 
-            let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
+                io.to(room).emit('win', `${user.userName} win the game as ${user.userRole}`)
 
-            let prisoner = game.getPrisoner(room)
-            let warden = game.getWarden(room)
-            let spectators = game.getSpectator(room)
+                let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
 
-            io.to(room).emit('score', game.getScore(room))
+                let prisoner = game.getPrisoner(room)
+                let warden = game.getWarden(room)
+                let spectators = game.getSpectator(room)
 
-            io.to(room).emit('pPosition',pPosition);
-            io.to(room).emit('wPosition',wPosition);
-            io.to(room).emit('tPosition',tPosition);
-            io.to(room).emit('oPositions',oPositions);
+                io.to(room).emit('score', game.getScore(room))
 
-            io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
-            io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+                io.to(room).emit('pPosition',pPosition);
+                io.to(room).emit('wPosition',wPosition);
+                io.to(room).emit('tPosition',tPosition);
+                io.to(room).emit('oPositions',oPositions);
 
-            if (spectators) {
-                game.rooms[room].spectators.forEach((spectator:any) =>{
-                    const _spectator = game.fetchUser(spectator.userId)
-                    io.to(_spectator.userId).emit('direction', game.getAvailableDirection(_spectator))
-                })
-            }
+                io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
+                io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+
+                if (spectators) {
+                    game.rooms[room].spectators.forEach((spectator:any) =>{
+                        const _spectator = game.fetchUser(spectator.userId)
+                        io.to(_spectator.userId).emit('direction', game.getAvailableDirection(_spectator))
+                    })
+                }
+
+            })();
         }
     })
 });

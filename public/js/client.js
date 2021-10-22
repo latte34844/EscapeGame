@@ -42,6 +42,15 @@ socket.on('greeting', greeting =>{
     }
     
 })
+
+socket.on('score', score => {
+    document.getElementById("scoreboard").innerHTML = `${score.player1}: ${score.player1Score}\n${score.player2}: ${score.player2Score}`
+})
+
+socket.on('win', e => {
+    alert(e)
+})
+
 socket.on('direction', direction => {
     console.log('recieve direction')
     if (direction.right) show('right');

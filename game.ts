@@ -25,9 +25,13 @@ export class Game {
                 userId:id
             })   
         }else{
+
             this.rooms[room][role]={
                 userId:id
-           }
+            } 
+
+            if (role === 'prisoner') this.rooms[room].player1 = id
+            else this.rooms[room].player2 = id
         }
          
         this.users.push({
@@ -206,23 +210,31 @@ export class Game {
         }
     }
 
-    getWarden(room: string) {
+    getWarden(room: string): User {
         return this.fetchUser(this.rooms[room].warden.userId)
     }
-    getPrisoner(room: string) {
+    getPrisoner(room: string): User {
         return this.fetchUser(this.rooms[room].prisoner.userId)
     }
     getSpectator(room: string) {
         return this.rooms[room].spectators
     }
-
-    setScore(room: string, prisonerScore: number, wardenScore: number) {
-        this.rooms[room].score = {
-            prisonerScore: prisonerScore,
-            wardenScore: wardenScore
-        }
+    getPlayer1Name(room: string): string{
+        return this.fetchUser(this.rooms[room].player1).userName
+    }
+    getPlayer2Name(room: string): string{
+        return this.fetchUser(this.rooms[room].player2).userName
     }
 
+    setScore(room: string, player1Score: number, player2Score: number){
+        this.rooms[room].score = {
+            player1: this.getPlayer1Name(room),
+            player2: this.getPlayer2Name(room),
+            player1Score: player1Score,
+            player2Score: player2Score
+        }
+    }
+    
     getScore(room: string): Score {
         return this.rooms[room].score
     }
@@ -258,14 +270,18 @@ export class Game {
     win(user: User) {
         let room = user.userRoom
         let currentScore = this.getScore(room)
-        if (user.userRole === 'warden') {
-            this.setScore(room, currentScore.prisonerScore, currentScore.wardenScore+1)
+        if (user.userId == this.rooms[room].player1) {
+            this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
-            this.setScore(room, currentScore.prisonerScore+1, currentScore.wardenScore)
+            this.setScore(room, currentScore.player1Score, ++currentScore.player2Score)
         }
     }
 
     restartGame(room: string) {
        return this.init(room, this.getPrisoner(room), this.getWarden(room))
+    }
+
+    delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
     }
 }
