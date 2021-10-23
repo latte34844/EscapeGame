@@ -136,13 +136,13 @@ const setTposition = (position) =>{
 window.addEventListener('keydown', (e) => {
     var key = e.keyCode;
     //down
-    if (key == 40 || key == 83) console.log('down')
+    if (key == 40 || key == 83) socket.emit('movePosition','down')
     //up 
-    if (key == 38 || key == 87) console.log('up')
+    if (key == 38 || key == 87) socket.emit('movePosition','up')
     //left
-    if (key == 37 || key == 65) console.log('left')
+    if (key == 37 || key == 65) socket.emit('movePosition','left')
     //right
-    if (key == 39 || key == 68) console.log('right')
+    if (key == 39 || key == 68) socket.emit('movePosition','right')
     //enter 
     if (key == 13) console.log('enter')
     //esc 
