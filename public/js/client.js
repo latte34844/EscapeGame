@@ -104,6 +104,14 @@ const setWposition = (position) =>{
 }
 
 const setOpositions = (positions) =>{
+    const pastObstacles = document.querySelectorAll(".obstacle");
+    console.log('pastobstacle', pastObstacles)
+    if (pastObstacles !== null) {
+        pastObstacles.forEach(pastObstacle => {
+            pastObstacle.innerHTML = ''
+            pastObstacle.classList.remove('obstacle')
+        })
+    }
     console.log(positions)
     positions.forEach(position =>{
         const xy = document.querySelector("." + position);
@@ -114,6 +122,11 @@ const setOpositions = (positions) =>{
 }
 
 const setTposition = (position) =>{
+    const pastXY = document.querySelector(".tunnel");
+    if(pastXY !== null){
+        pastXY.innerHTML= '';
+        pastXY.classList.remove('tunnel');
+    }
     const xy = document.querySelector("." + position);
     xy.classList.add('tunnel')
     xy.innerHTML='<img class="tunnelImg" src="../images/tunnel.png">';

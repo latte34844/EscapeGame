@@ -125,10 +125,10 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 io.to(room).emit('score', game.getScore(room))
 
-                io.to(room).emit('pPosition',pPosition);
-                io.to(room).emit('wPosition',wPosition);
                 io.to(room).emit('tPosition',tPosition);
                 io.to(room).emit('oPositions',oPositions);
+                io.to(room).emit('pPosition',pPosition);
+                io.to(room).emit('wPosition',wPosition);
 
                 io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
                 io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
