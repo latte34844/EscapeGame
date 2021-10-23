@@ -5,9 +5,8 @@ ts-node app.ts
 ```
 start server with watch mode: 
 ``` 
-npm run dev 
+npm run dev // -- any change in .js .html .ts files will restart the server --
 ```
--- any change in .js .html .ts files will restart the server -- <br />
 access server at 
 ```
 localhost:3000
