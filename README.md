@@ -1,6 +1,18 @@
 # EscapeGame
-start server: ts-node app.ts  
-at localhost:3000
+start server
+``` 
+ts-node app.ts 
+```
+start server with watch mode <br />
+-- any change in .js .html .ts files will restart the server --
+
+``` 
+npm run dev 
+```
+access server at 
+```
+localhost:3000
+```
 
 # git command
 for set up remote 

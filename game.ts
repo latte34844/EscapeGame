@@ -3,30 +3,43 @@ import {User, Direction, Score} from './interface'
 export class Game {
     users: User[]
     rooms: any
+
     constructor(){
-        this.rooms = []
+        this.rooms = {}
         this.users = []
     }
 
     join(userName:string,id:string,room:string){
+
         if(!this.rooms[room]){
             this.rooms[room]= {}
             console.log('create new room')
-        }
-        if(this.rooms[room]['warden'] && this.rooms[room]['prisoner']){
-            console.log(`the room ${room} is full`)
-            return 'the room is full'
-        }
+        }        
+
         const role = this.createRole(room)
-         this.rooms[room][role]={
-             userId:id,
+        if(role === 'spectator'){
+            if(!this.rooms[room].spectators){
+                this.rooms[room].spectators=[]
+            }  
+            this.rooms[room].spectators.push({
+                userId:id
+            })   
+        }else{
+
+            this.rooms[room][role]={
+                userId:id
+            } 
+
+            if (role === 'prisoner') this.rooms[room].player1 = id
+            else this.rooms[room].player2 = id
         }
+         
         this.users.push({
             userName: userName,
             userId: id,
             userRole: role,
             userRoom: room, 
-            userPosition: 'x0y0'
+            userPosition: 'x6y6'
         })
         console.log('create user')
         return role
@@ -36,19 +49,21 @@ export class Game {
     createRole(room:string){
         let role = ''
         let random = Math.floor( Math.random() * 2)
+
         if(random === 0){
             role = 'prisoner'
         }else{
             role = 'warden'
         }
+
         if(!this.rooms[room][role]){
             return role
-        }else if(role === 'prisoner'){
+        }else if(role === 'prisoner' && !this.rooms[room]['warden']){
             return 'warden'
-        }else if(role === 'warden'){
+        }else if(role === 'warden' && !this.rooms[room]['prisoner']){
             return 'prisoner'
         }
-        return role
+        return 'spectator'
     }
     
     isRoomFull(room:string){
@@ -58,8 +73,9 @@ export class Game {
     createRoomObstacle(room:string){
         const oPositions:string[] = []
         while(oPositions.length < 5){
-            let x = Math.floor(Math.random() * 5) +1
-            let y = Math.floor(Math.random() * 5) +1
+            let x = Math.floor( Math.random() * 5 ) + 1
+            let y = Math.floor( Math.random() * 5 ) + 1
+
             const oPosition = "x" + x.toString() + "y" + y.toString()
             if(!oPositions.find(o => o === oPosition)){
                 oPositions.push(oPosition)
@@ -73,9 +89,10 @@ export class Game {
 
     createTunnel(room:string){
         while(true){
-            let x = Math.floor(Math.random() * 5) +1
-            let y = Math.floor(Math.random() * 5) +1
+            let x = Math.floor( Math.random() * 5 ) + 1
+            let y = Math.floor( Math.random() * 5 ) + 1
             const tPosition = "x" + x.toString() + "y" + y.toString()
+
             if(!this.rooms[room].notFree.find((nf:string) => nf === tPosition)){
                 console.log('tunnel ',tPosition)
                 this.rooms[room].tunnel= tPosition
@@ -87,9 +104,10 @@ export class Game {
     }
     createUserPosition(user:User){
         while(true){
-            let x = Math.floor(Math.random() * 5) +1;
-            let y = Math.floor(Math.random() * 5) +1;
+            let x = Math.floor( Math.random() * 5 ) + 1;
+            let y = Math.floor( Math.random() * 5 ) + 1;
             const userPosition = "x" + x.toString() + "y" + y.toString()
+
             if(!this.rooms[user.userRoom].notFree.find((nf:string) => nf === userPosition)){
                 user.userPosition = userPosition
                 console.log(this.users)
@@ -101,7 +119,7 @@ export class Game {
     fetchUser(id:string){
         let user = this.users.find((u:User) => u.userId === id)
         if(user === undefined){
-            throw new TypeError('Error')
+            throw new TypeError('Error On Fetcing User')
         }
         return user
     }
@@ -111,6 +129,7 @@ export class Game {
         let x = +position.split('')[1]
         let y = +position.split('')[3]
         console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
+
         switch (controller){
             case "up":
                 if (this.checkMove(user,controller)){
@@ -134,6 +153,7 @@ export class Game {
                 }
                 break
         }
+
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
         console.log(position)
@@ -189,23 +209,31 @@ export class Game {
         }
     }
 
-    getWarden(room: string) {
+    getWarden(room: string): User {
         return this.fetchUser(this.rooms[room].warden.userId)
     }
-    getPrisoner(room: string) {
+    getPrisoner(room: string): User {
         return this.fetchUser(this.rooms[room].prisoner.userId)
     }
     getSpectator(room: string) {
         return this.rooms[room].spectators
     }
-
-    setScore(room: string, prisonerScore: number, wardenScore: number) {
-        this.rooms[room].score = {
-            prisonerScore: prisonerScore,
-            wardenScore: wardenScore
-        }
+    getPlayer1Name(room: string): string{
+        return this.fetchUser(this.rooms[room].player1).userName
+    }
+    getPlayer2Name(room: string): string{
+        return this.fetchUser(this.rooms[room].player2).userName
     }
 
+    setScore(room: string, player1Score: number, player2Score: number){
+        this.rooms[room].score = {
+            player1: this.getPlayer1Name(room),
+            player2: this.getPlayer2Name(room),
+            player1Score: player1Score,
+            player2Score: player2Score
+        }
+    }
+    
     getScore(room: string): Score {
         return this.rooms[room].score
     }
@@ -241,14 +269,18 @@ export class Game {
     win(user: User) {
         let room = user.userRoom
         let currentScore = this.getScore(room)
-        if (user.userRole === 'warden') {
-            this.setScore(room, currentScore.prisonerScore, currentScore.wardenScore+1)
+        if (user.userId == this.rooms[room].player1) {
+            this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
-            this.setScore(room, currentScore.prisonerScore+1, currentScore.wardenScore)
+            this.setScore(room, currentScore.player1Score, ++currentScore.player2Score)
         }
     }
 
     restartGame(room: string) {
-       return this.init(room, this.getPrisoner(room), this.getWarden(room))
+        return this.init(room, this.getPrisoner(room), this.getWarden(room))
+    }
+
+    delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
     }
 }

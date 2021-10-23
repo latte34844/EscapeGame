@@ -81,3 +81,11 @@ button:hover{
     height: 150px;
     visibility: visible;
 }
+
+.scoreboard{
+    text-align: center;
+}
+
+#scoreboard{
+    text-align: center;
+}
