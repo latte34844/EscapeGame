@@ -143,6 +143,12 @@ io.on('connection', (socket: socketIO.Socket) => {
             })();
         }
     })
+
+    socket.on('reset', () =>{
+        const user = game.fetchUser(socket.id)
+        console.log(game.rooms[user.userRoom])
+        io.to(user.userRoom).emit('clear',game.rooms[user.userRoom])
+    })
 });
 
 
