@@ -3,7 +3,7 @@ start server
 ``` 
 ts-node app.ts 
 ```
-start server with watch mode < br />
+start server with watch mode <br />
 -- any change in .js .html .ts files will restart the server --
 
 ``` 
