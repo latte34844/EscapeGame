@@ -93,6 +93,12 @@ io.on('connection', (socket: socketIO.Socket) => {
         }
         io.to(user.userId).emit('direction', game.getAvailableDirection(user))
     })
+
+    socket.on('reset', () =>{
+        const user = game.fetchUser(socket.id)
+        console.log(game.rooms[user.userRoom])
+        io.to(user.userRoom).emit('clear',game.rooms[user.userRoom])
+    })
 });
 
 

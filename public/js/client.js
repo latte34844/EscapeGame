@@ -7,6 +7,10 @@ for(const control of document.querySelectorAll(".control")){
     })
 }
 
+document.querySelector("#rs").addEventListener("click", ()=>{
+    socket.emit('reset')
+})
+
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
     console.log(controller)
@@ -59,6 +63,29 @@ function hide(id) {
     document.getElementById(id).disabled = true;
     document.getElementById(id).style.opacity = redOpacity;
 }
+
+socket.on('clear', room => {
+    const pXY = document.querySelector(".ppresentXY");
+    if(pXY !== null){
+        pXY.innerHTML= '';
+        pXY.classList.remove('ppresentXY');
+    }
+    const wXY = document.querySelector(".wpresentXY");
+    if(wXY !== null){
+        wXY.innerHTML= '';
+        wXY.classList.remove('wpresentXY');
+    }
+    const obstacles = room.obstacle
+    obstacles.forEach(obstacle => {
+        const oXY = document.querySelector("." + obstacle);
+        oXY.innerHTML= '';
+        oXY.classList.remove('obstacle')
+    })
+    const tunnel = room.tunnel
+    const tXY = document.querySelector("." + tunnel);
+    tXY.innerHTML= '';
+    tXY.classList.remove('tunnel')
+})
 
 function show(id) {
     document.getElementById(id).disabled = false;
