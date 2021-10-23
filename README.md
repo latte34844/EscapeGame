@@ -1,6 +1,12 @@
 # EscapeGame
-start server: ts-node app.ts 
-start server with watch mode: npm run dev 
+start server: 
+``` 
+ts-node app.ts 
+```
+start server with watch mode: 
+``` 
+npm run dev 
+```
 -- any change in .js .html .ts files will restart the server --
 server at localhost:3000
 
