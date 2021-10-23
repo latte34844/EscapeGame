@@ -7,8 +7,11 @@ start server with watch mode:
 ``` 
 npm run dev 
 ```
--- any change in .js .html .ts files will restart the server --
-server at localhost:3000
+-- any change in .js .html .ts files will restart the server -- <br />
+access server at 
+```
+localhost:3000
+```
 
 # git command
 for set up remote 
