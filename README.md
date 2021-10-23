@@ -1,11 +1,13 @@
 # EscapeGame
-start server: 
+start server
 ``` 
 ts-node app.ts 
 ```
-start server with watch mode: 
+start server with watch mode < br />
+-- any change in .js .html .ts files will restart the server --
+
 ``` 
-npm run dev // -- any change in .js .html .ts files will restart the server --
+npm run dev 
 ```
 access server at 
 ```
