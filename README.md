@@ -1,8 +1,5 @@
-# EscapeGame
-start server
-``` 
-ts-node app.ts 
-```
+# EscapeGamee
+
 start server with watch mode <br />
 -- any change in .js .html .ts files will restart the server --
 
@@ -12,6 +9,27 @@ npm run dev
 access server at 
 ```
 localhost:3000
+```
+
+# Production 
+
+build docker image 
+
+```
+docker build --tag escapegame:"__tagname" . // for example "docker build --tag escapegame:test ."
+```
+
+run docker 
+
+``` 
+docker run --name escapegame -p 3000:3000 -d escapegame:"__tagname"
+```
+
+stop docker 
+
+```
+docker kill escapegame 
+docker rm escapegame
 ```
 
 # git command
