@@ -214,6 +214,11 @@ var Game = /** @class */ (function () {
         }
         return false;
     };
+    Game.prototype.getTurn = function (user1, user2) {
+        if (this.isYourTurn(user1))
+            return user1.userName + ' turn';
+        return user2.userName + ' turn';
+    };
     Game.prototype.isWarden = function (user) {
         return user.userRole === "warden";
     };

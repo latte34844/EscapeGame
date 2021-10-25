@@ -48,7 +48,7 @@ socket.on('greeting', greeting =>{
 })
 
 socket.on('score', score => {
-    document.getElementById("scoreboard").innerHTML = `${score.player1}: ${score.player1Score}\n${score.player2}: ${score.player2Score}`
+    document.getElementById("scoreboard").innerHTML = `${score.player1}: ${score.player1Score} ${score.player2}: ${score.player2Score}`
 })
 
 socket.on('win', e => {
@@ -113,6 +113,9 @@ socket.on('yourTurn',()=>{
     },1000)
 })
 
+socket.on('turn',(e)=>{
+    document.getElementById('turn').innerHTML = e;
+})
 function show(id) {
     document.getElementById(id).disabled = false;
     document.getElementById(id).style.opacity = incOpacity;

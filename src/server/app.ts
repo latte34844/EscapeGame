@@ -76,6 +76,9 @@ io.on('connection', (socket: socketIO.Socket) => {
             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
             
+            io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
+            io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
+            
             console.log('send direction')
         }       
     })
@@ -109,6 +112,8 @@ io.on('connection', (socket: socketIO.Socket) => {
         io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
         io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
         
+        io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
+        io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
         if (checkWin) {
 
@@ -139,6 +144,9 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
                 io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+
+                io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
+                io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
                 if (spectators) {
                     game.rooms[room].spectators.forEach((spectator:any) =>{

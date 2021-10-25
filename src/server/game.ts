@@ -205,6 +205,11 @@ export class Game {
         return false;
     }
 
+    getTurn(user1: User, user2: User){
+        if (this.isYourTurn(user1)) return user1.userName + ' turn';
+        return user2.userName + ' turn';
+    }
+    
     isWarden(user: User){
         return user.userRole === "warden"
     }
@@ -341,9 +346,6 @@ export class Game {
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
-<<<<<<< HEAD
-    
-=======
 
     checkDistant(user1: User, user2: User) {
         //if distant between warden and prisoner is less than 1 rerandom map
@@ -355,5 +357,4 @@ export class Game {
         let user2_y = +user2Position.split('')[3]
         
     }
->>>>>>> 88b58b66834b380087fa4a2e95ef998efac31217
 }

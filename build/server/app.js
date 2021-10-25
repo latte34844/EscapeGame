@@ -107,6 +107,8 @@ io.on('connection', function (socket) {
             io.to(room).emit('oPositions', oPositions);
             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
+            io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
+            io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
             console.log('send direction');
         }
     });
@@ -130,6 +132,8 @@ io.on('connection', function (socket) {
         var warden = game.getWarden(room);
         io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
         io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
+        io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
+        io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
         if (checkWin) {
             (function () { return __awaiter(void 0, void 0, void 0, function () {
                 var _a, oPositions, tPosition, pPosition, wPosition, prisoner, warden, spectators;
@@ -154,6 +158,8 @@ io.on('connection', function (socket) {
                             io.to(room).emit('wPosition', wPosition);
                             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
                             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
+                            io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
+                            io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
                             if (spectators) {
                                 game.rooms[room].spectators.forEach(function (spectator) {
                                     var _spectator = game.fetchUser(spectator.userId);
