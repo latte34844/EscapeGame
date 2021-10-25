@@ -138,6 +138,7 @@ var Game = /** @class */ (function () {
         var x = +position.split('')[1];
         var y = +position.split('')[3];
         console.log("Present positon, x: " + x + ", y: " + y + " will move " + controller);
+        var pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller) {
             case "up":
                 if (this.checkMove(user, controller)) {
@@ -160,10 +161,63 @@ var Game = /** @class */ (function () {
                 }
                 break;
         }
+        var presentPosition = 'x' + x.toString() + 'y' + y.toString();
+        if (this.isYourTurn && (presentPosition != pastPosition)) {
+            this.rooms[user.userRoom].currentTurn++;
+            console.log(this.rooms[user.userRoom].currentTurn);
+        }
         position = "x" + x.toString() + "y" + y.toString();
         user.userPosition = position;
         console.log(position);
         return position;
+    };
+    Game.prototype.isYourTurn = function (user) {
+        var room = user.userRoom;
+        var thisRoom = this.rooms[room];
+        var turn = thisRoom.currentTurn;
+        var lastWinner = thisRoom.lastWinner;
+        if (user.userRole == 'prisoner') {
+            if (lastWinner == 'prisoner') {
+                if (turn % 2 == 1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                if (turn % 2 == 1) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+        if (user.userRole == 'warden') {
+            if (lastWinner == 'warden') {
+                if (turn % 2 == 1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                if (turn % 2 == 1) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    Game.prototype.getTurn = function (user1, user2) {
+        if (this.isYourTurn(user1))
+            return user1.userName + ' turn';
+        return user2.userName + ' turn';
     };
     Game.prototype.isWarden = function (user) {
         return user.userRole === "warden";
@@ -206,6 +260,13 @@ var Game = /** @class */ (function () {
         return true;
     };
     Game.prototype.getAvailableDirection = function (user) {
+        if (!this.isYourTurn(user))
+            return {
+                right: false,
+                up: false,
+                down: false,
+                left: false
+            };
         return {
             right: this.checkMove(user, 'right'),
             up: this.checkMove(user, 'up'),
@@ -235,6 +296,12 @@ var Game = /** @class */ (function () {
             player1Score: player1Score,
             player2Score: player2Score
         };
+    };
+    Game.prototype.setLastWinner = function (room, input) {
+        this.rooms[room].lastWinner = input;
+    };
+    Game.prototype.setTurn = function (room, input) {
+        this.rooms[room].currentTurn = input;
     };
     Game.prototype.getScore = function (room) {
         return this.rooms[room].score;
@@ -266,6 +333,7 @@ var Game = /** @class */ (function () {
     Game.prototype.win = function (user) {
         var room = user.userRoom;
         var currentScore = this.getScore(room);
+        this.rooms[room].currentTurn = 1;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score);
         }
@@ -278,6 +346,15 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.delay = function (ms) {
         return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+    };
+    Game.prototype.checkDistant = function (user1, user2) {
+        //if distant between warden and prisoner is less than 1 rerandom map
+        var user1Position = user1.userPosition;
+        var user2Position = user2.userPosition;
+        var user1_x = +user1Position.split('')[1];
+        var user1_y = +user1Position.split('')[3];
+        var user2_x = +user2Position.split('')[1];
+        var user2_y = +user2Position.split('')[3];
     };
     return Game;
 }());

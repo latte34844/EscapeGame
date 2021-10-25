@@ -42,6 +42,8 @@ io.on('connection', (socket: socketIO.Socket) => {
             let oPositions:string[] = []
             let tPosition = ''
             game.setScore(room, 0,0)
+            game.setLastWinner(room,'warden')
+            game.setTurn(room, 1)
             if(greeting != 'spectator'){
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
@@ -74,6 +76,9 @@ io.on('connection', (socket: socketIO.Socket) => {
             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
             
+            io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
+            io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
+            
             console.log('send direction')
         }       
     })
@@ -81,6 +86,8 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('disconnect', () => {
         console.log('disconnect: ', socket.id)
     })
+
+
 
     socket.on('movePosition', (controller:string) =>{
 
@@ -99,7 +106,14 @@ io.on('connection', (socket: socketIO.Socket) => {
             io.to(user.userRoom).emit('wPosition', position)
         }
 
-        io.to(user.userId).emit('direction', game.getAvailableDirection(user))
+        let prisoner = game.getPrisoner(room)
+        let warden = game.getWarden(room)
+
+        io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
+        io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+        
+        io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
+        io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
         if (checkWin) {
 
@@ -130,6 +144,9 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
                 io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+
+                io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
+                io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
                 if (spectators) {
                     game.rooms[room].spectators.forEach((spectator:any) =>{

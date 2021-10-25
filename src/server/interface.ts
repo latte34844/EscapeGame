@@ -15,6 +15,9 @@ export interface Room {
     player2: User
     prisoner: string
     score: Score
+    currentTurn: number
+    counter: number
+    lastWinner: string
 }
 
 export interface Direction {
