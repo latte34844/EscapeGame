@@ -1,4 +1,5 @@
-import {User, Direction, Score} from './interface'
+import e from 'cors'
+import {User, Direction, Score, Room} from './interface'
 
 export class Game {
     users: User[]
@@ -129,7 +130,7 @@ export class Game {
         let x = +position.split('')[1]
         let y = +position.split('')[3]
         console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
-
+        let pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller){
             case "up":
                 if (this.checkMove(user,controller)){
@@ -153,11 +154,55 @@ export class Game {
                 }
                 break
         }
-
+        let presentPosition = 'x' + x.toString() + 'y' + y.toString();
+        if(this.isYourTurn && (presentPosition != pastPosition) ){
+            this.rooms[user.userRoom].currentTurn++;
+            console.log(this.rooms[user.userRoom].currentTurn);
+        }
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
         console.log(position)
+        
         return position
+    }
+
+    isYourTurn(user: User):boolean{ //game start at turn 1
+        let room = user.userRoom;
+        let thisRoom = this.rooms[room];
+        let turn = thisRoom.currentTurn;
+        let lastWinner = thisRoom.lastWinner;
+        if (user.userRole == 'prisoner'){
+            if(lastWinner == 'prisoner'){
+                if (turn % 2 == 1){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }else{
+                if (turn % 2 == 1){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        if (user.userRole == 'warden'){
+            if(lastWinner == 'warden'){
+                if (turn % 2 == 1){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                if(turn % 2 == 1){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     isWarden(user: User){
@@ -196,6 +241,7 @@ export class Game {
         if (this.isWarden(user) && pos === this.rooms[room].tunnel) return false
         if (this.rooms[room].obstacle.includes(pos)) return false 
         if (pos === this.getWarden(room).userPosition) return false
+        if (this.isYourTurn(user) == false) return false
         return true
         
     }
@@ -234,6 +280,12 @@ export class Game {
         }
     }
     
+    setLastWinner(room: string, input: string){
+        this.rooms[room].lastWinner = input;
+    }
+    setTurn(room: string,input: number){
+        this.rooms[room].currentTurn = input;
+    }
     getScore(room: string): Score {
         return this.rooms[room].score
     }
@@ -269,6 +321,7 @@ export class Game {
     win(user: User) {
         let room = user.userRoom
         let currentScore = this.getScore(room)
+        this.rooms[room].currentTurn = 1;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
@@ -283,4 +336,5 @@ export class Game {
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
+    
 }

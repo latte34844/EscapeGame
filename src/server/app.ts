@@ -42,6 +42,8 @@ io.on('connection', (socket: socketIO.Socket) => {
             let oPositions:string[] = []
             let tPosition = ''
             game.setScore(room, 0,0)
+            game.setLastWinner(room,'warden')
+            game.setTurn(room, 1)
             if(greeting != 'spectator'){
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
@@ -81,6 +83,8 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('disconnect', () => {
         console.log('disconnect: ', socket.id)
     })
+
+
 
     socket.on('movePosition', (controller:string) =>{
 

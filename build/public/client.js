@@ -101,6 +101,17 @@ socket.on('clear', room => {
     tXY.classList.remove('tunnel')
 })
 
+socket.on('yourTurn',()=>{
+    var counter = 10;
+    var interval = setInterval(function(){
+        counter--;
+        if (counter == 0){
+            clearInterval(interval);
+            socket.emit('passTurn');
+        }
+    },1000)
+})
+
 function show(id) {
     document.getElementById(id).disabled = false;
     document.getElementById(id).style.opacity = incOpacity;
