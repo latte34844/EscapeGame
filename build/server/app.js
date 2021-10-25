@@ -126,7 +126,10 @@ io.on('connection', function (socket) {
             checkWin = game.checkCatch(user);
             io.to(user.userRoom).emit('wPosition', position);
         }
-        io.to(user.userId).emit('direction', game.getAvailableDirection(user));
+        var prisoner = game.getPrisoner(room);
+        var warden = game.getWarden(room);
+        io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
+        io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
         if (checkWin) {
             (function () { return __awaiter(void 0, void 0, void 0, function () {
                 var _a, oPositions, tPosition, pPosition, wPosition, prisoner, warden, spectators;

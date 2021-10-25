@@ -103,7 +103,12 @@ io.on('connection', (socket: socketIO.Socket) => {
             io.to(user.userRoom).emit('wPosition', position)
         }
 
-        io.to(user.userId).emit('direction', game.getAvailableDirection(user))
+        let prisoner = game.getPrisoner(room)
+        let warden = game.getWarden(room)
+
+        io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner))
+        io.to(warden.userId).emit('direction', game.getAvailableDirection(warden))
+        
 
         if (checkWin) {
 
