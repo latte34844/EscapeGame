@@ -1,0 +1,95 @@
+
+.box{
+    background-color: black;
+    border:5px solid grey;
+    height: 100px;
+    padding: 0;
+}
+.container{
+    width: 500px;
+    text-align: center;
+
+}
+
+.prisonerImg{
+    height: 90px;
+    width: 90px;
+}
+
+.wardenImg{
+    height: 90px;
+    width: 90px;
+}
+
+.obsatcleImg{
+    height: 90px;
+    width: 90px;
+}
+
+.tunnelImg{
+    height: 90px;
+    width: 90px;
+}
+
+.btnImg{
+    width: 150px;
+    height: 150px;
+}
+
+button {
+    background: none;
+}
+button:hover{
+    background-color: red;
+    border-radius: 60px;
+}
+
+#button{
+    text-align:center;
+    border-width: 0 ; 
+}
+
+#up{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    transform: rotate(90deg);
+    visibility: visible;
+}
+
+#down{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    transform: rotate(90deg);
+    visibility: visible;
+}
+#left{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    visibility: visible;
+}
+
+#right{
+    border-width: 0; 
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    visibility: visible;
+}
+ 
+#rs{
+    text-align: center;
+}
+
+.scoreboard{
+    text-align: center;
+}
+
+#scoreboard{
+    text-align: center;
+}
