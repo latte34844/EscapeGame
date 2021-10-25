@@ -57,6 +57,7 @@ socket.on('win', e => {
 
 socket.on('direction', direction => {
     console.log('recieve direction')
+    console.log(direction.right, direction.left, direction.up, direction.down)
     if (direction.right) show('right');
     else hide('right');
     if (direction.down) show('down');

@@ -205,10 +205,10 @@ var Game = /** @class */ (function () {
             }
             else {
                 if (turn % 2 == 1) {
-                    return true;
+                    return false;
                 }
                 else {
-                    return false;
+                    return true;
                 }
             }
         }
@@ -252,11 +252,16 @@ var Game = /** @class */ (function () {
             return false;
         if (pos === this.getWarden(room).userPosition)
             return false;
-        if (this.isYourTurn(user) == false)
-            return false;
         return true;
     };
     Game.prototype.getAvailableDirection = function (user) {
+        if (!this.isYourTurn(user))
+            return {
+                right: false,
+                up: false,
+                down: false,
+                left: false
+            };
         return {
             right: this.checkMove(user, 'right'),
             up: this.checkMove(user, 'up'),
@@ -336,6 +341,15 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.delay = function (ms) {
         return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+    };
+    Game.prototype.checkDistant = function (user1, user2) {
+        //if distant between warden and prisoner is less than 1 rerandom map
+        var user1Position = user1.userPosition;
+        var user2Position = user2.userPosition;
+        var user1_x = +user1Position.split('')[1];
+        var user1_y = +user1Position.split('')[3];
+        var user2_x = +user2Position.split('')[1];
+        var user2_y = +user2Position.split('')[3];
     };
     return Game;
 }());

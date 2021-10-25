@@ -196,9 +196,9 @@ export class Game {
                 }
             }else{
                 if(turn % 2 == 1){
-                    return true;
-                }else{
                     return false;
+                }else{
+                    return true;
                 }
             }
         }
@@ -241,12 +241,17 @@ export class Game {
         if (this.isWarden(user) && pos === this.rooms[room].tunnel) return false
         if (this.rooms[room].obstacle.includes(pos)) return false 
         if (pos === this.getWarden(room).userPosition) return false
-        if (this.isYourTurn(user) == false) return false
         return true
         
     }
 
     getAvailableDirection(user: User):Direction{
+        if (!this.isYourTurn(user)) return { 
+            right: false,
+            up: false,
+            down:false, 
+            left: false
+            }
         return { 
         right: this.checkMove(user, 'right'),
         up: this.checkMove(user, 'up'),
@@ -336,7 +341,6 @@ export class Game {
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
-<<<<<<< HEAD
 
     checkDistant(user1: User, user2: User) {
         //if distant between warden and prisoner is less than 1 rerandom map
@@ -348,7 +352,4 @@ export class Game {
         let user2_y = +user2Position.split('')[3]
         
     }
-=======
-    
->>>>>>> 63ebef6f43d13a61081fc139a1c856db0a78c9be
 }
