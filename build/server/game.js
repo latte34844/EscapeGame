@@ -138,6 +138,7 @@ var Game = /** @class */ (function () {
         var x = +position.split('')[1];
         var y = +position.split('')[3];
         console.log("Present positon, x: " + x + ", y: " + y + " will move " + controller);
+        var pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller) {
             case "up":
                 if (this.checkMove(user, controller)) {
@@ -160,10 +161,58 @@ var Game = /** @class */ (function () {
                 }
                 break;
         }
+        var presentPosition = 'x' + x.toString() + 'y' + y.toString();
+        if (this.isYourTurn && (presentPosition != pastPosition)) {
+            this.rooms[user.userRoom].currentTurn++;
+            console.log(this.rooms[user.userRoom].currentTurn);
+        }
         position = "x" + x.toString() + "y" + y.toString();
         user.userPosition = position;
         console.log(position);
         return position;
+    };
+    Game.prototype.isYourTurn = function (user) {
+        var room = user.userRoom;
+        var thisRoom = this.rooms[room];
+        var turn = thisRoom.currentTurn;
+        var lastWinner = thisRoom.lastWinner;
+        if (user.userRole == 'prisoner') {
+            if (lastWinner == 'prisoner') {
+                if (turn % 2 == 1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                if (turn % 2 == 1) {
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+        if (user.userRole == 'warden') {
+            if (lastWinner == 'warden') {
+                if (turn % 2 == 1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                if (turn % 2 == 1) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
     };
     Game.prototype.isWarden = function (user) {
         return user.userRole === "warden";
@@ -203,6 +252,8 @@ var Game = /** @class */ (function () {
             return false;
         if (pos === this.getWarden(room).userPosition)
             return false;
+        if (this.isYourTurn(user) == false)
+            return false;
         return true;
     };
     Game.prototype.getAvailableDirection = function (user) {
@@ -236,6 +287,12 @@ var Game = /** @class */ (function () {
             player2Score: player2Score
         };
     };
+    Game.prototype.setLastWinner = function (room, input) {
+        this.rooms[room].lastWinner = input;
+    };
+    Game.prototype.setTurn = function (room, input) {
+        this.rooms[room].currentTurn = input;
+    };
     Game.prototype.getScore = function (room) {
         return this.rooms[room].score;
     };
@@ -266,6 +323,7 @@ var Game = /** @class */ (function () {
     Game.prototype.win = function (user) {
         var room = user.userRoom;
         var currentScore = this.getScore(room);
+        this.rooms[room].currentTurn = 1;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score);
         }

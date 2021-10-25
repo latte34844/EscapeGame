@@ -75,6 +75,8 @@ io.on('connection', function (socket) {
             var oPositions = [];
             var tPosition = '';
             game.setScore(room, 0, 0);
+            game.setLastWinner(room, 'warden');
+            game.setTurn(room, 1);
             if (greeting != 'spectator') {
                 oPositions = game.createRoomObstacle(room);
                 tPosition = game.createTunnel(room);
