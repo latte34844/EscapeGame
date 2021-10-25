@@ -207,4 +207,15 @@ export class Game {
         // assume user is warden
         return user.userPosition === this.fetchUser(this.rooms[user.userRoom]['prisoner']).userPosition
     }
+
+    checkDistant(user1: User, user2: User) {
+        //if distant between warden and prisoner is less than 1 rerandom map
+        let user1Position = user1.userPosition;
+        let user2Position = user2.userPosition;
+        let user1_x = +user1Position.split('')[1]
+        let user1_y = +user1Position.split('')[3]
+        let user2_x = +user2Position.split('')[1]
+        let user2_y = +user2Position.split('')[3]
+        
+    }
 }
