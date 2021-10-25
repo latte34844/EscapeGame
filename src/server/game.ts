@@ -336,19 +336,5 @@ export class Game {
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
-<<<<<<< HEAD
-
-    checkDistant(user1: User, user2: User) {
-        //if distant between warden and prisoner is less than 1 rerandom map
-        let user1Position = user1.userPosition;
-        let user2Position = user2.userPosition;
-        let user1_x = +user1Position.split('')[1]
-        let user1_y = +user1Position.split('')[3]
-        let user2_x = +user2Position.split('')[1]
-        let user2_y = +user2Position.split('')[3]
-        
-    }
-=======
     
->>>>>>> 63ebef6f43d13a61081fc139a1c856db0a78c9be
 }
