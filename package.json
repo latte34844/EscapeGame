@@ -30,9 +30,10 @@
     "typescript": "^4.4.4"
   },
   "nodemonConfig": {
+    "watch": ["./build/public/css/*.css ","./build/public/images/*.png"],
     "ignore": [
       "README.md"
     ],
-    "ext": "ts,js,html"
+    "ext": "ts,js,html,css,png"
   }
 }

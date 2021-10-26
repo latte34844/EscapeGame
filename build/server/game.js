@@ -227,6 +227,8 @@ var Game = /** @class */ (function () {
     };
     //check that can move or not
     Game.prototype.checkMove = function (user, direction) {
+        if (!this.isYourTurn(user))
+            return false;
         var position = user.userPosition;
         var room = user.userRoom;
         var x = +position.split('')[1];
@@ -260,13 +262,6 @@ var Game = /** @class */ (function () {
         return true;
     };
     Game.prototype.getAvailableDirection = function (user) {
-        if (!this.isYourTurn(user))
-            return {
-                right: false,
-                up: false,
-                down: false,
-                left: false
-            };
         return {
             right: this.checkMove(user, 'right'),
             up: this.checkMove(user, 'up'),

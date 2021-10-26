@@ -165,6 +165,7 @@ export class Game {
         
         return position
     }
+    
 
     isYourTurn(user: User):boolean{ //game start at turn 1
         let room = user.userRoom;
@@ -220,6 +221,7 @@ export class Game {
 
     //check that can move or not
     checkMove(user:User,direction: string): boolean {
+        if (!this.isYourTurn(user)) return false
         let position = user.userPosition
         let room = user.userRoom
         let x = +position.split('')[1]
@@ -251,12 +253,6 @@ export class Game {
     }
 
     getAvailableDirection(user: User):Direction{
-        if (!this.isYourTurn(user)) return { 
-            right: false,
-            up: false,
-            down:false, 
-            left: false
-            }
         return { 
         right: this.checkMove(user, 'right'),
         up: this.checkMove(user, 'up'),

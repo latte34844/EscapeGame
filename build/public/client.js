@@ -43,8 +43,11 @@ socket.on('greeting', greeting =>{
         //alert with chat box => wait for another player
         alert('Your role is '+ greeting)
         console.log('role:', greeting)
-    }
-    
+    }  
+})
+
+socket.on('role', role => {
+    document.getElementById("role").innerHTML = `role: ${role}`
 })
 
 socket.on('score', score => {
