@@ -57,7 +57,7 @@ h1{
     margin:0 auto;
     width:70%;
     position:relative;
-    top:20px;
+    top:33px;
 }
 #form-wrap{
     width:45%;
@@ -179,5 +179,5 @@ img {
 }
 #picture{
   position:relative;
-  top:30px;
+  top:25px;
 }
