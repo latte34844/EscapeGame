@@ -105,6 +105,8 @@ io.on('connection', function (socket) {
             io.to(room).emit('wPosition', wPosition);
             io.to(room).emit('tPosition', tPosition);
             io.to(room).emit('oPositions', oPositions);
+            io.to(prisoner.userId).emit('role', prisoner.userRole);
+            io.to(warden.userId).emit('role', warden.userRole);
             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
             io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
@@ -117,6 +119,10 @@ io.on('connection', function (socket) {
     });
     socket.on('movePosition', function (controller) {
         var user = game.fetchUser(socket.id);
+        if (!game.checkMove(user, controller)) {
+            console.log('cant move');
+            return;
+        }
         var position = game.movePosition(user, controller);
         var room = user.userRoom;
         var checkWin = false;
@@ -130,6 +136,8 @@ io.on('connection', function (socket) {
         }
         var prisoner = game.getPrisoner(room);
         var warden = game.getWarden(room);
+        io.to(prisoner.userId).emit('role', prisoner.userRole);
+        io.to(warden.userId).emit('role', warden.userRole);
         io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
         io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
         io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
@@ -144,6 +152,7 @@ io.on('connection', function (socket) {
                             _b.sent();
                             // TODO
                             // cut scene here
+                            console.log("win: " + user.userName);
                             game.win(user);
                             io.to(room).emit('win', user.userName + " win the game as " + user.userRole);
                             io.to(room).emit('clear', "clear object");
@@ -152,10 +161,24 @@ io.on('connection', function (socket) {
                             warden = game.getWarden(room);
                             spectators = game.getSpectator(room);
                             io.to(room).emit('score', game.getScore(room));
-                            io.to(room).emit('tPosition', tPosition);
+                            return [4 /*yield*/, game.delay(50)];
+                        case 2:
+                            _b.sent();
                             io.to(room).emit('oPositions', oPositions);
+                            return [4 /*yield*/, game.delay(50)];
+                        case 3:
+                            _b.sent();
+                            io.to(room).emit('tPosition', tPosition);
+                            return [4 /*yield*/, game.delay(50)];
+                        case 4:
+                            _b.sent();
                             io.to(room).emit('pPosition', pPosition);
+                            return [4 /*yield*/, game.delay(50)];
+                        case 5:
+                            _b.sent();
                             io.to(room).emit('wPosition', wPosition);
+                            io.to(prisoner.userId).emit('role', prisoner.userRole);
+                            io.to(warden.userId).emit('role', warden.userRole);
                             io.to(prisoner.userId).emit('direction', game.getAvailableDirection(prisoner));
                             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
                             io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));

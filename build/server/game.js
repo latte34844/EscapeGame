@@ -89,6 +89,10 @@ var Game = /** @class */ (function () {
         this.rooms[room].notFree = __spreadArray([], oPositions, true);
         return oPositions;
     };
+    // checkInvalidObstacle(room:string){
+    //     //diagonal patterns
+    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
+    // }
     Game.prototype.createTunnel = function (room) {
         var _loop_2 = function () {
             var x = Math.floor(Math.random() * 5) + 1;
@@ -227,6 +231,8 @@ var Game = /** @class */ (function () {
     };
     //check that can move or not
     Game.prototype.checkMove = function (user, direction) {
+        if (!this.isYourTurn(user))
+            return false;
         var position = user.userPosition;
         var room = user.userRoom;
         var x = +position.split('')[1];
@@ -260,13 +266,6 @@ var Game = /** @class */ (function () {
         return true;
     };
     Game.prototype.getAvailableDirection = function (user) {
-        if (!this.isYourTurn(user))
-            return {
-                right: false,
-                up: false,
-                down: false,
-                left: false
-            };
         return {
             right: this.checkMove(user, 'right'),
             up: this.checkMove(user, 'up'),

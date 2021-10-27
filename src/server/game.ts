@@ -88,6 +88,13 @@ export class Game {
         return oPositions
     }
 
+    // checkInvalidObstacle(room:string){
+    //     //diagonal patterns
+    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
+
+        
+    // }
+
     createTunnel(room:string){
         while(true){
             let x = Math.floor( Math.random() * 5 ) + 1
@@ -165,6 +172,7 @@ export class Game {
         
         return position
     }
+    
 
     isYourTurn(user: User):boolean{ //game start at turn 1
         let room = user.userRoom;
@@ -220,6 +228,7 @@ export class Game {
 
     //check that can move or not
     checkMove(user:User,direction: string): boolean {
+        if (!this.isYourTurn(user)) return false
         let position = user.userPosition
         let room = user.userRoom
         let x = +position.split('')[1]
@@ -251,12 +260,6 @@ export class Game {
     }
 
     getAvailableDirection(user: User):Direction{
-        if (!this.isYourTurn(user)) return { 
-            right: false,
-            up: false,
-            down:false, 
-            left: false
-            }
         return { 
         right: this.checkMove(user, 'right'),
         up: this.checkMove(user, 'up'),
