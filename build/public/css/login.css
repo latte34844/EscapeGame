@@ -6,7 +6,7 @@
 }
 ::-webkit-input-placeholder {
     color: grey;
-    font-size:5px;
+    font-size:15px;
   }
 body{
     position:relative;
@@ -43,14 +43,13 @@ h1{
     text-align:center;
     display:block;
     width:80%;
-    height:20em;
+    height:450px;
     margin:0 auto;
     background-color: #b16101;
     border-radius: 20px;
 }
 #wrap2{
     width:95%;
-    height:20em;
     margin:0 auto;
 }
 #input-wrap{
@@ -101,7 +100,7 @@ input{
     background-color:black;
     color:whitesmoke;
     position:relative;
-    top:60px;
+    top:75px;
     border-radius:20px;
     border-style: solid;
     border: solid black 3px;
