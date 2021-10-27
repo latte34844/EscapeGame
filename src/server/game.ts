@@ -1,4 +1,5 @@
-import {User, Direction, Score} from './interface'
+import e from 'cors'
+import {User, Direction, Score, Room} from './interface'
 
 export class Game {
     users: User[]
@@ -87,6 +88,13 @@ export class Game {
         return oPositions
     }
 
+    // checkInvalidObstacle(room:string){
+    //     //diagonal patterns
+    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
+
+        
+    // }
+
     createTunnel(room:string){
         while(true){
             let x = Math.floor( Math.random() * 5 ) + 1
@@ -129,7 +137,7 @@ export class Game {
         let x = +position.split('')[1]
         let y = +position.split('')[3]
         console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
-
+        let pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller){
             case "up":
                 if (this.checkMove(user,controller)){
@@ -153,13 +161,63 @@ export class Game {
                 }
                 break
         }
-
+        let presentPosition = 'x' + x.toString() + 'y' + y.toString();
+        if(this.isYourTurn && (presentPosition != pastPosition) ){
+            this.rooms[user.userRoom].currentTurn++;
+            console.log(this.rooms[user.userRoom].currentTurn);
+        }
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
         console.log(position)
+        
         return position
     }
+    
 
+    isYourTurn(user: User):boolean{ //game start at turn 1
+        let room = user.userRoom;
+        let thisRoom = this.rooms[room];
+        let turn = thisRoom.currentTurn;
+        let lastWinner = thisRoom.lastWinner;
+        if (user.userRole == 'prisoner'){
+            if(lastWinner == 'prisoner'){
+                if (turn % 2 == 1){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }else{
+                if (turn % 2 == 1){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        if (user.userRole == 'warden'){
+            if(lastWinner == 'warden'){
+                if (turn % 2 == 1){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                if(turn % 2 == 1){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    getTurn(user1: User, user2: User){
+        if (this.isYourTurn(user1)) return user1.userName + ' turn';
+        return user2.userName + ' turn';
+    }
+    
     isWarden(user: User){
         return user.userRole === "warden"
     }
@@ -170,6 +228,7 @@ export class Game {
 
     //check that can move or not
     checkMove(user:User,direction: string): boolean {
+        if (!this.isYourTurn(user)) return false
         let position = user.userPosition
         let room = user.userRoom
         let x = +position.split('')[1]
@@ -234,6 +293,12 @@ export class Game {
         }
     }
     
+    setLastWinner(room: string, input: string){
+        this.rooms[room].lastWinner = input;
+    }
+    setTurn(room: string,input: number){
+        this.rooms[room].currentTurn = input;
+    }
     getScore(room: string): Score {
         return this.rooms[room].score
     }
@@ -269,6 +334,7 @@ export class Game {
     win(user: User) {
         let room = user.userRoom
         let currentScore = this.getScore(room)
+        this.rooms[room].currentTurn = 1;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
@@ -282,5 +348,16 @@ export class Game {
 
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
+    }
+
+    checkDistant(user1: User, user2: User) {
+        //if distant between warden and prisoner is less than 1 rerandom map
+        let user1Position = user1.userPosition;
+        let user2Position = user2.userPosition;
+        let user1_x = +user1Position.split('')[1]
+        let user1_y = +user1Position.split('')[3]
+        let user2_x = +user2Position.split('')[1]
+        let user2_y = +user2Position.split('')[3]
+        
     }
 }

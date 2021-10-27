@@ -43,12 +43,15 @@ socket.on('greeting', greeting =>{
         //alert with chat box => wait for another player
         alert('Your role is '+ greeting)
         console.log('role:', greeting)
-    }
-    
+    }  
+})
+
+socket.on('role', role => {
+    document.getElementById("role").innerHTML = `role: ${role}`
 })
 
 socket.on('score', score => {
-    document.getElementById("scoreboard").innerHTML = `${score.player1}: ${score.player1Score}\n${score.player2}: ${score.player2Score}`
+    document.getElementById("scoreboard").innerHTML = `${score.player1}: ${score.player1Score} ${score.player2}: ${score.player2Score}`
 })
 
 socket.on('win', e => {
@@ -57,6 +60,7 @@ socket.on('win', e => {
 
 socket.on('direction', direction => {
     console.log('recieve direction')
+    console.log(direction.right, direction.left, direction.up, direction.down)
     if (direction.right) show('right');
     else hide('right');
     if (direction.down) show('down');
@@ -101,6 +105,20 @@ socket.on('clear', room => {
     tXY.classList.remove('tunnel')
 })
 
+socket.on('yourTurn',()=>{
+    var counter = 10;
+    var interval = setInterval(function(){
+        counter--;
+        if (counter == 0){
+            clearInterval(interval);
+            socket.emit('passTurn');
+        }
+    },1000)
+})
+
+socket.on('turn',(e)=>{
+    document.getElementById('turn').innerHTML = e;
+})
 function show(id) {
     document.getElementById(id).disabled = false;
     document.getElementById(id).style.opacity = incOpacity;
