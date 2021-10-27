@@ -8,7 +8,7 @@ npm run dev
 ```
 access server at 
 ```
-localhost:3000
+localhost:3000`
 ```
 
 # Production 
