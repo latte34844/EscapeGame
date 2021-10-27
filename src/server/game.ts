@@ -88,6 +88,22 @@ export class Game {
   checkInvalidObtacle(room: string) {
     //check if all obstacles are in same row or colums
     const oPositions: string[] = this.rooms[room].obstacle;
+
+    const rows: string[] = [];
+    const columns: string[] = [];
+
+    for (let i = 0; i < 5; i++) {
+      rows.push(oPositions[i].charAt(1));
+      columns.push(oPositions[i].charAt(3));
+    }
+    const sameRows = (rows) => rows.every((v) => v === rows[0]);
+    const sameColumns = (columns) => columns.every((v) => v === columns[0]);
+
+    if (sameRows) return true;
+    if (sameColumns) return true;
+
+    //check if all obstcles are in same diagonal
+    const diagonal_level2: String[] = ["x2y1", "x1y2"];
   }
 
   createTunnel(room: string) {
