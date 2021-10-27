@@ -142,6 +142,12 @@ io.on('connection', function (socket) {
         io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
         io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
         io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
+        if (user.userRole == 'prisoner') {
+            io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
+        }
+        if (user.userRole == 'warden') {
+            io.to(prisoner.userId).emit('yourTurn', game.getAvailableDirection(prisoner), 'prisoner');
+        }
         if (checkWin) {
             (function () { return __awaiter(void 0, void 0, void 0, function () {
                 var _a, oPositions, tPosition, pPosition, wPosition, prisoner, warden, spectators;
