@@ -10,7 +10,7 @@
   }
 body{
     position:relative;
-    top:3em;
+    top:50px;
     background-color:black !important;
     background:
     linear-gradient(whitesmoke,black) calc(0.5*100%/10),
@@ -36,7 +36,7 @@ h1{
 }
 #login{
     position:relative;
-    top:2em;
+    top:30px;
     text-align:center;
 }
 #wrap{
@@ -71,7 +71,6 @@ h1{
 #howto-wrap{
     width:40%;
     float:left;
-    height:20em;
     position:absolute;
     top:0px;
 }
@@ -100,7 +99,8 @@ input{
     background-color:black;
     color:whitesmoke;
     position:relative;
-    top:75px;
+    top:80px;
+    padding:10px;
     border-radius:20px;
     border-style: solid;
     border: solid black 3px;
@@ -131,7 +131,7 @@ img {
   cursor: pointer;
   padding: 16px;
   position:relative;
-  top:-9.5em;
+  top:-170px;
   text-decoration: none;
   margin-top: -22px;
   color: white;
@@ -164,6 +164,8 @@ img {
   text-align: center;
 }
 .dot {
+  position:relative;
+  top:10px;
   cursor: pointer;
   height: 15px;
   width: 15px;
