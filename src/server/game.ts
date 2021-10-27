@@ -88,6 +88,13 @@ export class Game {
         return oPositions
     }
 
+    // checkInvalidObstacle(room:string){
+    //     //diagonal patterns
+    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
+
+        
+    // }
+
     createTunnel(room:string){
         while(true){
             let x = Math.floor( Math.random() * 5 ) + 1

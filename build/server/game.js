@@ -89,6 +89,10 @@ var Game = /** @class */ (function () {
         this.rooms[room].notFree = __spreadArray([], oPositions, true);
         return oPositions;
     };
+    // checkInvalidObstacle(room:string){
+    //     //diagonal patterns
+    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
+    // }
     Game.prototype.createTunnel = function (room) {
         var _loop_2 = function () {
             var x = Math.floor(Math.random() * 5) + 1;
