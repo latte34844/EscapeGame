@@ -34,3 +34,8 @@ export interface Score {
     player2Score: number
 }
 
+export interface Message {
+    message: string
+    from: string
+}
+
