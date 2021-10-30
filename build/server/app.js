@@ -164,21 +164,13 @@ io.on('connection', function (socket) {
                             _a = game.restartGame(room), oPositions = _a.oPositions, tPosition = _a.tPosition, pPosition = _a.pPosition, wPosition = _a.wPosition;
                             spectators = game.getSpectator(room);
                             io.to(room).emit('score', game.getScore(room));
+                            io.to(room).emit('clear', game.rooms[room]);
                             return [4 /*yield*/, game.delay(100)];
                         case 2:
                             _b.sent();
                             io.to(room).emit('oPositions', oPositions);
-                            return [4 /*yield*/, game.delay(100)];
-                        case 3:
-                            _b.sent();
                             io.to(room).emit('tPosition', tPosition);
-                            return [4 /*yield*/, game.delay(100)];
-                        case 4:
-                            _b.sent();
                             io.to(room).emit('pPosition', pPosition);
-                            return [4 /*yield*/, game.delay(100)];
-                        case 5:
-                            _b.sent();
                             io.to(room).emit('wPosition', wPosition);
                             io.to(prisoner.userId).emit('role', prisoner.userRole);
                             io.to(warden.userId).emit('role', warden.userRole);
@@ -203,7 +195,6 @@ io.on('connection', function (socket) {
         console.log(game.rooms[user.userRoom]);
         io.to(user.userRoom).emit('clear', game.rooms[user.userRoom]);
     });
-<<<<<<< HEAD
     socket.on('admin', function () {
         io.emit('population', game.users);
         io.emit('adminRoom', game.rooms);
@@ -246,7 +237,7 @@ io.on('connection', function (socket) {
                 }
             });
         }); })();
-=======
+    });
     socket.on('message', function (message) {
         var user = game.fetchUser(message.from);
         console.log('message', message.message, user.userName + 'end');
@@ -254,7 +245,6 @@ io.on('connection', function (socket) {
             message: message.message,
             from: user.userName
         });
->>>>>>> 10be353521bf988a1c85e36e1d699a82bad9d0c1
     });
 });
 var PORT = process.env.PORT || 3000;

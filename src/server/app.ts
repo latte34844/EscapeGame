@@ -187,7 +187,6 @@ io.on('connection', (socket: socketIO.Socket) => {
         console.log(game.rooms[user.userRoom])
         io.to(user.userRoom).emit('clear',game.rooms[user.userRoom])
     })
-<<<<<<< HEAD
 
     socket.on('admin', ()=>{
         io.emit('population', game.users)
@@ -230,8 +229,8 @@ io.on('connection', (socket: socketIO.Socket) => {
                         io.to(_spectator.userId).emit('direction', game.getAvailableDirection(_spectator))
                     })
                 }
-        })();        
-=======
+        })(); 
+    })       
     socket.on('message', (message: Message)=> {
         let user = game.fetchUser(message.from)
         console.log('message',message.message, user.userName+'end')
@@ -239,7 +238,6 @@ io.on('connection', (socket: socketIO.Socket) => {
             message: message.message,
             from: user.userName
         })
->>>>>>> 10be353521bf988a1c85e36e1d699a82bad9d0c1
     })
 });
 
