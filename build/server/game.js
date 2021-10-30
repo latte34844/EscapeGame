@@ -57,13 +57,16 @@ var Game = /** @class */ (function () {
         else {
             role = 'warden';
         }
+        if (this.rooms[room][role] === '') {
+            return role;
+        }
         if (!this.rooms[room][role]) {
             return role;
         }
-        else if (role === 'prisoner' && !this.rooms[room]['warden']) {
+        else if (role === 'prisoner' && (!this.rooms[room]['warden'] || this.rooms[room]['warden'] === '')) {
             return 'warden';
         }
-        else if (role === 'warden' && !this.rooms[room]['prisoner']) {
+        else if (role === 'warden' && (!this.rooms[room]['prisoner'] || this.rooms[room]['prisoner'] === '')) {
             return 'prisoner';
         }
         return 'spectator';
@@ -315,6 +318,14 @@ var Game = /** @class */ (function () {
         // assume user is warden
         return user.userPosition === this.getPrisoner(user.userRoom).userPosition;
     };
+    Game.prototype.swapRole = function (room) {
+        var temp1 = this.getWarden(room);
+        var temp2 = this.getPrisoner(room);
+        this.rooms[room].prisoner.userId = temp1.userId;
+        temp1.userRole = 'prisoner';
+        this.rooms[room].warden.userId = temp2.userId;
+        temp2.userRole = 'warden';
+    };
     Game.prototype.init = function (room, prisoner, warden) {
         var oPositions = this.createRoomObstacle(room);
         var tPosition = this.createTunnel(room);
@@ -342,6 +353,21 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.restartGame = function (room) {
         return this.init(room, this.getPrisoner(room), this.getWarden(room));
+    };
+    Game.prototype.resetRole = function (room) {
+        console.log('reset role');
+        var temp1 = this.getWarden(room);
+        var temp2 = this.getPrisoner(room);
+        this.rooms[room].prisoner = '';
+        this.rooms[room].warden = '';
+        temp1.userRole = this.createRole(room);
+        this.rooms[room][temp1.userRole] = {
+            userId: temp1.userId
+        };
+        temp2.userRole = this.createRole(room);
+        this.rooms[room][temp2.userRole] = {
+            userId: temp2.userId
+        };
     };
     Game.prototype.delay = function (ms) {
         return new Promise(function (resolve) { return setTimeout(resolve, ms); });

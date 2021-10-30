@@ -7,9 +7,6 @@ for(const control of document.querySelectorAll(".control")){
     })
 }
 
-document.querySelector("#rs").addEventListener("click", ()=>{
-    socket.emit('reset')
-})
 
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
@@ -71,10 +68,6 @@ socket.on('direction', direction => {
     else hide('left');
 })
 
-socket.on('clear', () => {
-    // TODO
-    // clear object
-})
 const redOpacity = 0.2;
 const incOpacity = 1;
 function hide(id) {
@@ -93,16 +86,19 @@ socket.on('clear', room => {
         wXY.innerHTML= '';
         wXY.classList.remove('wpresentXY');
     }
-    const obstacles = room.obstacle
-    obstacles.forEach(obstacle => {
-        const oXY = document.querySelector("." + obstacle);
-        oXY.innerHTML= '';
-        oXY.classList.remove('obstacle')
-    })
-    const tunnel = room.tunnel
-    const tXY = document.querySelector("." + tunnel);
-    tXY.innerHTML= '';
-    tXY.classList.remove('tunnel')
+    const pastObstacles = document.querySelectorAll(".obstacle");
+    console.log('pastobstacle', pastObstacles)
+    if (pastObstacles !== null) {
+        pastObstacles.forEach(pastObstacle => {
+            pastObstacle.innerHTML = ''
+            pastObstacle.classList.remove('obstacle')
+        })
+    }
+    const tXY = document.querySelector(".tunnel");
+    if(tXY !== null){
+        tXY.innerHTML= '';
+        tXY.classList.remove('tunnel');
+    }
 })
 
 socket.on('yourTurn',()=>{
@@ -149,14 +145,6 @@ const setWposition = (position) =>{
 }
 
 const setOpositions = (positions) =>{
-    const pastObstacles = document.querySelectorAll(".obstacle");
-    console.log('pastobstacle', pastObstacles)
-    if (pastObstacles !== null) {
-        pastObstacles.forEach(pastObstacle => {
-            pastObstacle.innerHTML = ''
-            pastObstacle.classList.remove('obstacle')
-        })
-    }
     console.log(positions)
     positions.forEach(position =>{
         const xy = document.querySelector("." + position);
@@ -167,11 +155,6 @@ const setOpositions = (positions) =>{
 }
 
 const setTposition = (position) =>{
-    const pastXY = document.querySelector(".tunnel");
-    if(pastXY !== null){
-        pastXY.innerHTML= '';
-        pastXY.classList.remove('tunnel');
-    }
     const xy = document.querySelector("." + position);
     xy.classList.add('tunnel')
     xy.innerHTML='<img class="tunnelImg" src="images/tunnel.png">';
