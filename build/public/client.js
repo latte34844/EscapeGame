@@ -11,6 +11,8 @@ document.querySelector("#rs").addEventListener("click", ()=>{
     socket.emit('reset')
 })
 
+
+
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
     console.log(controller)
@@ -81,6 +83,50 @@ function hide(id) {
     document.getElementById(id).disabled = true;
     document.getElementById(id).style.opacity = redOpacity;
 }
+
+function sendMessage() {
+    var input = document.getElementById('input');
+    if (input.value) {
+        let message = {
+            message: input.value,
+            from: socket.id
+        }
+        socket.emit('message', message)
+        addChat({
+            message: input.value,
+            from: "you"
+        }, true)
+    }
+    input.value = ''
+}
+
+socket.on('chat', message => {
+    addChat(message, false)
+})
+
+function addChat(message, mychat) {
+    var item = document.createElement('li')
+    if (mychat) {
+        item.className="mchat";
+    } else {
+        item.className="chat";
+    }
+    item.textContent = message.from+": "+message.message
+    document.getElementById('messages').appendChild(item)
+    scrollChatWindow()
+}
+
+const scrollChatWindow = () => {
+    $('#messages').animate({
+        scrollTop: $('#messages li:last-child').position().top,
+    }, 500);
+    setTimeout(() => {
+        let messagesLength = $('#messages li');
+        if (messagesLength.length > 10) {
+            messagesLength.eq(0).remove();
+        }
+    }, 500);
+};
 
 socket.on('clear', room => {
     const pXY = document.querySelector(".ppresentXY");
@@ -189,7 +235,7 @@ window.addEventListener('keydown', (e) => {
     //right
     if (key == 39 || key == 68) socket.emit('movePosition','right')
     //enter 
-    if (key == 13) console.log('enter')
+    if (key == 13) sendMessage()
     //esc 
     if (key == 27) console.log('escape')
 }, true)

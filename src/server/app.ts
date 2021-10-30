@@ -5,6 +5,7 @@ import express, {Request,Response} from 'express'
 import socketIO from 'socket.io'
 import bodyParser from 'body-parser'
 import { Game } from './game'
+import { Message } from './interface'
 
 const app = express();
 const server = http.createServer(app);
@@ -144,8 +145,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
 
-                let prisoner = game.getPrisoner(room)
-                let warden = game.getWarden(room)
                 let spectators = game.getSpectator(room)
 
                 io.to(room).emit('score', game.getScore(room))
@@ -183,6 +182,14 @@ io.on('connection', (socket: socketIO.Socket) => {
         const user = game.fetchUser(socket.id)
         console.log(game.rooms[user.userRoom])
         io.to(user.userRoom).emit('clear',game.rooms[user.userRoom])
+    })
+    socket.on('message', (message: Message)=> {
+        let user = game.fetchUser(message.from)
+        console.log('message',message.message, user.userName+'end')
+        socket.to(user.userRoom).emit('chat', <Message>{
+            message: message.message,
+            from: user.userName
+        })
     })
 });
 

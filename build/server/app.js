@@ -144,7 +144,7 @@ io.on('connection', function (socket) {
         io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
         if (checkWin) {
             (function () { return __awaiter(void 0, void 0, void 0, function () {
-                var _a, oPositions, tPosition, pPosition, wPosition, prisoner, warden, spectators;
+                var _a, oPositions, tPosition, pPosition, wPosition, spectators;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0: return [4 /*yield*/, game.delay(50)];
@@ -157,8 +157,6 @@ io.on('connection', function (socket) {
                             io.to(room).emit('win', user.userName + " win the game as " + user.userRole);
                             io.to(room).emit('clear', "clear object");
                             _a = game.restartGame(room), oPositions = _a.oPositions, tPosition = _a.tPosition, pPosition = _a.pPosition, wPosition = _a.wPosition;
-                            prisoner = game.getPrisoner(room);
-                            warden = game.getWarden(room);
                             spectators = game.getSpectator(room);
                             io.to(room).emit('score', game.getScore(room));
                             return [4 /*yield*/, game.delay(50)];
@@ -199,6 +197,14 @@ io.on('connection', function (socket) {
         var user = game.fetchUser(socket.id);
         console.log(game.rooms[user.userRoom]);
         io.to(user.userRoom).emit('clear', game.rooms[user.userRoom]);
+    });
+    socket.on('message', function (message) {
+        var user = game.fetchUser(message.from);
+        console.log('message', message.message, user.userName + 'end');
+        socket.to(user.userRoom).emit('chat', {
+            message: message.message,
+            from: user.userName
+        });
     });
 });
 var PORT = process.env.PORT || 3000;
