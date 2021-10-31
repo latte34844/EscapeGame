@@ -106,7 +106,7 @@ socket.on('clear', room => {
 })
 
 socket.on('yourTurn', (direction, role)=>{
-    var counter = 10;
+    var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){
         pastXY = document.querySelector(".ppresentXY").classList[2];
@@ -145,7 +145,7 @@ socket.on('yourTurn', (direction, role)=>{
         }
         if(counter==0) clearInterval(interval);
     },1000)
-})
+})xw
 
 socket.on('turn',(e)=>{
     document.getElementById('turn').innerHTML = e;
