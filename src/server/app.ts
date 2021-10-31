@@ -127,6 +127,7 @@ io.on('connection', (socket: socketIO.Socket) => {
         let prisoner = game.getPrisoner(room)
         let warden = game.getWarden(room)
 
+
         io.to(prisoner.userId).emit('role', prisoner.userRole)
         io.to(warden.userId).emit('role', warden.userRole)
 
@@ -135,6 +136,13 @@ io.on('connection', (socket: socketIO.Socket) => {
         
         io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
         io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
+
+        if(user.userRole == 'prisoner'){
+            io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
+        }
+        if(user.userRole == 'warden'){
+            io.to(prisoner.userId).emit('yourTurn',game.getAvailableDirection(prisoner), 'prisoner');
+        }
 
         if (checkWin) {
 

@@ -258,7 +258,6 @@ export class Game {
         if (this.rooms[room].obstacle.includes(pos)) return false 
         if (pos === this.getWarden(room).userPosition) return false
         return true
-        
     }
 
     getAvailableDirection(user: User):Direction{
