@@ -335,6 +335,12 @@ var Game = /** @class */ (function () {
         else {
             this.setScore(room, currentScore.player1Score, ++currentScore.player2Score);
         }
+        if (user.userRole == 'prisoner') {
+            this.setLastWinner(room, 'prisoner');
+        }
+        else {
+            this.setLastWinner(room, 'warden');
+        }
     };
     Game.prototype.restartGame = function (room) {
         return this.init(room, this.getPrisoner(room), this.getWarden(room));
