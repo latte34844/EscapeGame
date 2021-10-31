@@ -109,10 +109,10 @@ socket.on('yourTurn', (direction, role)=>{
     var counter = 10;
     let pastXY,curXY;
     if(role == 'prisoner'){
-        let pastXY = document.querySelector(".ppresentXY").classList[2]; //can someone extract pastXY to this function
+        pastXY = document.querySelector(".ppresentXY").classList[2];
         console.log('role is prisoner' + pastXY);
     }else{
-        let pastXY = document.querySelector(".wpresentXY").classList[2];//can someone extract pastXY to this function
+        pastXY = document.querySelector(".wpresentXY").classList[2];
         console.log('role is warden' + pastXY);
     }
     
@@ -121,13 +121,19 @@ socket.on('yourTurn', (direction, role)=>{
     var interval = setInterval(function(){
         console.log(counter);
         if(role == 'prisoner'){
-            let curXY = document.querySelector(".ppresentXY").classList[2]; //can someone extract pastXY to this function
+            curXY = document.querySelector(".ppresentXY").classList[2]; 
+            console.log('pastXY = '+ pastXY);
+            console.log('curXY = '+ curXY);
         }else{
-            let curXY = document.querySelector(".wpresentXY").classList[2]; //can someone extract pastXY to this function
+            curXY = document.querySelector(".wpresentXY").classList[2]; 
+            console.log('pastXY = ' + pastXY);
+            console.log('curXY = ' + curXY);
         }
         counter--;
         if(pastXY != curXY) clearInterval(interval);
         if (counter == 0 && (pastXY == curXY)){
+            console.log('pastXY = ' + pastXY);
+            console.log('curXY = ' + curXY);
             if (direction.right) arrayDir.push('right');
             if (direction.down) arrayDir.push('down');
             if (direction.up) arrayDir.push('up');
