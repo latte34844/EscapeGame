@@ -1,4 +1,5 @@
 import e from 'cors'
+import { isError } from 'util'
 import {User, Direction, Score, Room} from './interface'
 
 export class Game {
@@ -331,7 +332,12 @@ export class Game {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
             this.setScore(room, currentScore.player1Score, ++currentScore.player2Score)
+        } if(user.userRole == 'prisoner'){
+            this.setLastWinner(room, 'prisoner');
+        }else{
+            this.setLastWinner(room, 'warden');
         }
+        
     }
 
     restartGame(room: string) {
