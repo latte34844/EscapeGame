@@ -19,7 +19,7 @@ app.get('/', (req:Request,res:Response)=>{
 
 app.post('/client', (req:Request,res:Response)=>{
     res.redirect('/client' + '?user=' + req.body.username + '&room=' + req.body.room)
-    console.log(req.body.username)
+    // console.log(req.body.username)
 })
 
 app.get('/client', (req:Request,res:Response)=>{
@@ -31,7 +31,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     console.log("connect: " + socket.id)
     socket.on('joinRoom', (userName:string,room:string) =>{
         socket.join(room)
-        console.log(`Client Join\nsocket: ${socket.id}\nuser: ${userName}\nroom: ${room}`);
+        // .log(`Client Join\nsocket: ${socket.id}\nuser: ${userName}\nroom: ${room}`);
         const greeting = game.join(userName,socket.id,room)
         socket.emit('greeting',greeting)
         if(game.isRoomFull(room)){ 
@@ -81,8 +81,10 @@ io.on('connection', (socket: socketIO.Socket) => {
             
             io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
             io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
+
+            io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
             
-            console.log('send direction')
+            //  console.log('send direction')
         }       
     })
 
@@ -97,7 +99,7 @@ io.on('connection', (socket: socketIO.Socket) => {
         const user = game.fetchUser(socket.id)
 
         if(!game.checkMove(user,controller)) {
-            console.log('cant move');
+            // console.log('cant move');
             return;
         }
         const position = game.movePosition(user,controller)
@@ -152,8 +154,8 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
 
-                let prisoner = game.getPrisoner(room)
-                let warden = game.getWarden(room)
+                prisoner = game.getPrisoner(room)
+                warden = game.getWarden(room)
                 let spectators = game.getSpectator(room)
 
                 io.to(room).emit('score', game.getScore(room))
@@ -176,6 +178,8 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
                 io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
+                await game.delay(50)
+
                 if (spectators) {
                     game.rooms[room].spectators.forEach((spectator:any) =>{
                         const _spectator = game.fetchUser(spectator.userId)
@@ -189,7 +193,7 @@ io.on('connection', (socket: socketIO.Socket) => {
 
     socket.on('reset', () =>{
         const user = game.fetchUser(socket.id)
-        console.log(game.rooms[user.userRoom])
+        //console.log(game.rooms[user.userRoom])
         io.to(user.userRoom).emit('clear',game.rooms[user.userRoom])
     })
 });

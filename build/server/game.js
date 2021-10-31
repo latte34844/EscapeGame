@@ -18,7 +18,7 @@ var Game = /** @class */ (function () {
     Game.prototype.join = function (userName, id, room) {
         if (!this.rooms[room]) {
             this.rooms[room] = {};
-            console.log('create new room');
+            // console.log('create new room')
         }
         var role = this.createRole(room);
         if (role === 'spectator') {
@@ -45,7 +45,7 @@ var Game = /** @class */ (function () {
             userRoom: room,
             userPosition: 'x6y6'
         });
-        console.log('create user');
+        // console.log('create user')
         return role;
     };
     Game.prototype.createRole = function (room) {
@@ -84,7 +84,7 @@ var Game = /** @class */ (function () {
         while (oPositions.length < 5) {
             _loop_1();
         }
-        console.log('obstacles ', oPositions);
+        // console.log('obstacles ',oPositions)
         this.rooms[room].obstacle = oPositions;
         this.rooms[room].notFree = __spreadArray([], oPositions, true);
         return oPositions;
@@ -95,7 +95,7 @@ var Game = /** @class */ (function () {
             var y = Math.floor(Math.random() * 5) + 1;
             var tPosition = "x" + x.toString() + "y" + y.toString();
             if (!this_1.rooms[room].notFree.find(function (nf) { return nf === tPosition; })) {
-                console.log('tunnel ', tPosition);
+                // console.log('tunnel ',tPosition)
                 this_1.rooms[room].tunnel = tPosition;
                 this_1.rooms[room].notFree.push(tPosition);
                 return { value: tPosition };
@@ -115,7 +115,6 @@ var Game = /** @class */ (function () {
             var userPosition = "x" + x.toString() + "y" + y.toString();
             if (!this_2.rooms[user.userRoom].notFree.find(function (nf) { return nf === userPosition; })) {
                 user.userPosition = userPosition;
-                console.log(this_2.users);
                 return { value: userPosition };
             }
         };
@@ -137,7 +136,7 @@ var Game = /** @class */ (function () {
         var position = user.userPosition;
         var x = +position.split('')[1];
         var y = +position.split('')[3];
-        console.log("Present positon, x: " + x + ", y: " + y + " will move " + controller);
+        // console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
         var pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller) {
             case "up":
@@ -164,11 +163,11 @@ var Game = /** @class */ (function () {
         var presentPosition = 'x' + x.toString() + 'y' + y.toString();
         if (this.isYourTurn && (presentPosition != pastPosition)) {
             this.rooms[user.userRoom].currentTurn++;
-            console.log(this.rooms[user.userRoom].currentTurn);
+            // console.log(this.rooms[user.userRoom].currentTurn);
         }
         position = "x" + x.toString() + "y" + y.toString();
         user.userPosition = position;
-        console.log(position);
+        // console.log(position)
         return position;
     };
     Game.prototype.isYourTurn = function (user) {
