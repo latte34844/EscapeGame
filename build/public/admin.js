@@ -1,3 +1,9 @@
+$(document).ready(function() {
+    $('#mask-img').hide();
+    $("#admin").animate({ "top": 0 }, 2000);
+    $('#mask-img').delay(3000).fadeTo('slow',1);
+  }); 
+
 const socket = io();
 
 socket.emit('admin')
@@ -10,7 +16,8 @@ socket.on('population', (users)=>{
     pop.innerHTML = 
     `<h3 style="font-size:25px;">Online Users: ${users.length}</h3>
     <h3 style="font-size:25px;">Online Players: ${players.length}</h3>
-    <h3 style="font-size:25px;">Spectators: ${users.length - players.length}</h3><h3 id='rooms' style="font-size:40px;">Current Rooms</h3>`
+    <h3 style="font-size:25px;">Spectators: ${users.length - players.length}</h3>
+    <h3 id='rooms' style="font-size:40px;">Current Rooms</h3>`
 })
 socket.on('adminRoom', rooms =>{
     

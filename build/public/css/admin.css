@@ -42,6 +42,8 @@ body{
     border-bottom:solid red 5px;
 }
 #admin{
+    position:relative;
+    top:-200px;
     font-size:70px;
     text-align:center;
     border-bottom:solid red 10px;
