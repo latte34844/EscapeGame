@@ -137,3 +137,7 @@ button:hover {
   font-size: 1 rem;
   text-align: center;
 }
+
+#timer {
+  text-align: center;
+}

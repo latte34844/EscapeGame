@@ -178,6 +178,8 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
                 io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
+                io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
+
                 await game.delay(50)
 
                 if (spectators) {

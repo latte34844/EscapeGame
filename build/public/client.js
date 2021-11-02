@@ -119,31 +119,27 @@ socket.on('yourTurn', (direction, role)=>{
     let arrayDir = [];
     console.log('yourturn activated');
     var interval = setInterval(function(){
-        console.log(counter);
+        document.getElementById('timer').innerHTML = counter-1
         if(role == 'prisoner'){
             curXY = document.querySelector(".ppresentXY").classList[2]; 
-            console.log('pastXY = '+ pastXY);
-            console.log('curXY = '+ curXY);
         }else{
             curXY = document.querySelector(".wpresentXY").classList[2]; 
-            console.log('pastXY = ' + pastXY);
-            console.log('curXY = ' + curXY);
         }
         counter--;
         if(pastXY != curXY) clearInterval(interval);
         if (counter == 0 && (pastXY == curXY)){
-            console.log('pastXY = ' + pastXY);
-            console.log('curXY = ' + curXY);
             if (direction.right) arrayDir.push('right');
             if (direction.down) arrayDir.push('down');
             if (direction.up) arrayDir.push('up');
             if (direction.left) arrayDir.push('left');
             const randomDir = arrayDir[Math.floor(Math.random() * arrayDir.length)];
-            console.log(randomDir + ' randomed');
             socket.emit('movePosition', randomDir);
             clearInterval(interval);
         }
-        if(counter==0) clearInterval(interval);
+        if(counter==0) {
+            clearInterval(interval);
+            document.getElementById('timer').innerHTML = "--"
+        }
     },1000)
 })
 
