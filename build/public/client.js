@@ -56,6 +56,9 @@ socket.on('score', score => {
 socket.on('win', e => {
     alert(e)
 })
+socket.on('foundTreasure', e =>{
+    alert(e)
+})
 
 socket.on('direction', direction => {
     console.log('recieve direction')

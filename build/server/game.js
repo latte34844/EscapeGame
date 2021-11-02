@@ -115,14 +115,16 @@ var Game = /** @class */ (function () {
                 return state_1.value;
         }
     };
-    Game.prototype.createUserPosition = function (user) {
+    Game.prototype.createHiddenTreasure = function (room) {
         var _loop_3 = function () {
             var x = Math.floor(Math.random() * 5) + 1;
             var y = Math.floor(Math.random() * 5) + 1;
-            var userPosition = "x" + x.toString() + "y" + y.toString();
-            if (!this_2.rooms[user.userRoom].notFree.find(function (nf) { return nf === userPosition; })) {
-                user.userPosition = userPosition;
-                return { value: userPosition };
+            var hPosition = "x" + x.toString() + "y" + y.toString();
+            if (!this_2.rooms[room].notFree.find(function (nf) { return nf === hPosition; })) {
+                // console.log('tunnel ',tPosition)
+                this_2.rooms[room].hiddenTreasure = hPosition;
+                this_2.rooms[room].notFree.push(hPosition);
+                return { value: hPosition };
             }
         };
         var this_2 = this;
@@ -130,6 +132,23 @@ var Game = /** @class */ (function () {
             var state_2 = _loop_3();
             if (typeof state_2 === "object")
                 return state_2.value;
+        }
+    };
+    Game.prototype.createUserPosition = function (user) {
+        var _loop_4 = function () {
+            var x = Math.floor(Math.random() * 5) + 1;
+            var y = Math.floor(Math.random() * 5) + 1;
+            var userPosition = "x" + x.toString() + "y" + y.toString();
+            if (!this_3.rooms[user.userRoom].notFree.find(function (nf) { return nf === userPosition; })) {
+                user.userPosition = userPosition;
+                return { value: userPosition };
+            }
+        };
+        var this_3 = this;
+        while (true) {
+            var state_3 = _loop_4();
+            if (typeof state_3 === "object")
+                return state_3.value;
         }
     };
     Game.prototype.fetchUser = function (id) {
@@ -317,6 +336,20 @@ var Game = /** @class */ (function () {
         // assume user is warden
         return user.userPosition === this.getPrisoner(user.userRoom).userPosition;
     };
+    Game.prototype.checkHiddenTreasure = function (user) {
+        return ((user.userPosition === this.rooms[user.userRoom].hiddenTreasure) && (this.rooms[user.userRoom].hasFoundTreasure === false));
+    };
+    Game.prototype.foundTreasure = function (user) {
+        this.rooms[user.userRoom].hasFoundTreasure = true;
+        var room = user.userRoom;
+        var currentScore = this.getScore(room);
+        if (user.userId == this.rooms[room].player1) {
+            this.setScore(room, ++currentScore.player1Score, currentScore.player2Score);
+        }
+        else {
+            this.setScore(room, currentScore.player1Score, ++currentScore.player2Score);
+        }
+    };
     Game.prototype.swapRole = function (room) {
         var temp1 = this.getWarden(room);
         var temp2 = this.getPrisoner(room);
@@ -343,6 +376,7 @@ var Game = /** @class */ (function () {
         var room = user.userRoom;
         var currentScore = this.getScore(room);
         this.rooms[room].currentTurn = 1;
+        this.rooms[user.userRoom].hasFoundTreasure = false;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score);
         }
