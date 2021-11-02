@@ -153,10 +153,13 @@ io.on('connection', (socket: socketIO.Socket) => {
         io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
         io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
-        game.rooms[room].spectators.forEach((spectator:any) =>{
-            const u = game.fetchUser(spectator.userId)
-            io.to(u.userId).emit('turn', game.getTurn(prisoner,warden))
-        })
+        let spectators = game.rooms[room].spectators
+        if (spectators) {
+            spectators.forEach((spectator:any) =>{
+                const u = game.fetchUser(spectator.userId)
+                io.to(u.userId).emit('turn', game.getTurn(prisoner,warden))
+            })
+        }
 
         if(user.userRole == 'prisoner'){
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');

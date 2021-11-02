@@ -157,10 +157,13 @@ io.on('connection', function (socket) {
         io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
         io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
         io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
-        game.rooms[room].spectators.forEach(function (spectator) {
-            var u = game.fetchUser(spectator.userId);
-            io.to(u.userId).emit('turn', game.getTurn(prisoner, warden));
-        });
+        var spectators = game.rooms[room].spectators;
+        if (spectators) {
+            spectators.forEach(function (spectator) {
+                var u = game.fetchUser(spectator.userId);
+                io.to(u.userId).emit('turn', game.getTurn(prisoner, warden));
+            });
+        }
         if (user.userRole == 'prisoner') {
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
         }
