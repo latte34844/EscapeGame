@@ -12,7 +12,17 @@
 <body>
     <nav class ="navbar navbar-light bg-light">
         <span class="navbar-brand mb-0 h1">Escape plan!!!</span>
-        botton
+        <form action="/leave" method="POST">
+            <button type="submit">Leave Room</button>
+        </form>
+        <audio id="audio" controls autoplay>
+            <source id="musicsource" src="./musics/music1.mp3" type="audio/mpeg">
+        </audio>
+        <span>
+            <button id="music1" onclick="music(1)" disabled="true">music1</button>
+            <button id="music2" onclick="music(2)">music2</button>
+            <button id="music3" onclick="music(3)">music3</button>
+        </span>
     </nav>
     
     <div>

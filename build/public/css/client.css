@@ -212,3 +212,20 @@ button:hover {
   height: 236px;
 }
 
+audio::-webkit-media-controls-timeline {
+    display: none;
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+    display: none;
+}
+
+#music1 {
+  opacity: 0.2;
+}
+
+.achat {
+  margin-left: -20px;
+  font-style: normal;
+}

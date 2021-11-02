@@ -18,6 +18,10 @@ app.get('/', (req:Request,res:Response)=>{
     res.sendFile(path.join(__dirname,"../public/login.html"))
 });
 
+app.post('/leave', (req:Request,res:Response)=>{
+    res.redirect('/')
+});
+
 app.post('/client', (req:Request,res:Response)=>{
     res.redirect('/client' + '?user=' + req.body.username + '&room=' + req.body.room)
     // console.log(req.body.username)
@@ -106,8 +110,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
             console.log('send your turn')
-            //io to p and w , there rolw
-            //io to p and w, who join
             
         }       
     })
@@ -179,7 +181,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
             (async () => { 
 
-        
                 await game.delay(50);
 
                 // TODO
@@ -194,7 +195,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 prisoner = game.getPrisoner(room)
                 warden = game.getWarden(room)
-                let spectators = game.getSpectator(room)
 
                 io.to(room).emit('score', game.getScore(room))
                 io.to(room).emit('clear', game.rooms[room])
@@ -213,7 +213,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
                 io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
-                io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
+                io.to(user.userId).emit('yourTurn', game.getAvailableDirection(user), user.userRole)
 
                 await game.delay(50)
 
@@ -241,7 +241,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('adminResetGame', room =>{
         (async () => { 
 
-        
+
             await game.delay(50);
 
         game.resetRole(room)

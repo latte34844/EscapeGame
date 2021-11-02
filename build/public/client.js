@@ -7,12 +7,8 @@ for(const control of document.querySelectorAll(".control")){
     })
 }
 
-
-
-
 const handleClick = (controller)=>{
-    socket.emit('movePosition',controller)
-    console.log(controller)
+    move(controller)
 }
 
 socket.emit('joinRoom' , params.get('user'),params.get('room'));
@@ -36,12 +32,10 @@ socket.on('tPosition', position =>{
 
 socket.on('greeting', greeting =>{
     if(greeting === 'spectator'){
-        //alert with chat box
-        alert('the room is full')
+        sendActivity('The room is full.')
+        sendActivity('You will be a spectator.')
     }else{
-        //alert with chat box => wait for another player
-        alert('Your role is '+ greeting)
-        console.log('role:', greeting)
+        sendActivity('Your role is '+ greeting+'.')
     }  
 })
 
@@ -54,15 +48,13 @@ socket.on('score', score => {
 })
 
 socket.on('win', e => {
-    alert(e)
+    sendActivity(e)
 })
 socket.on('foundTreasure', e =>{
     alert(e)
 })
 
 socket.on('direction', direction => {
-    console.log('recieve direction')
-    console.log(direction.right, direction.left, direction.up, direction.down)
     if (direction.right) show('right');
     else hide('right');
     if (direction.down) show('down');
@@ -78,6 +70,15 @@ const incOpacity = 1;
 function hide(id) {
     document.getElementById(id).disabled = true;
     document.getElementById(id).style.opacity = redOpacity;
+}
+
+function sendActivity(message) {
+    var item = document.createElement('li')
+    item.className="mchat"
+    item.style.color="red"
+    item.textContent = message
+    document.getElementById('messages').appendChild(item)
+    scrollChatWindow()
 }
 
 function sendMessage() {
@@ -136,7 +137,6 @@ socket.on('clear', room => {
         wXY.classList.remove('wpresentXY');
     }
     const pastObstacles = document.querySelectorAll(".obstacle");
-    console.log('pastobstacle', pastObstacles)
     if (pastObstacles !== null) {
         pastObstacles.forEach(pastObstacle => {
             pastObstacle.innerHTML = ''
@@ -150,41 +150,42 @@ socket.on('clear', room => {
     }
 })
 
-socket.on('yourTurn', (direction, role)=>{
-    console.log('your turn ')
+socket.on('yourTurn', (direction, role) => {
+    console.log('your turn')
     var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){
         pastXY = document.querySelector(".ppresentXY").classList[2];
-        console.log('role is prisoner' + pastXY);
     }else{
         pastXY = document.querySelector(".wpresentXY").classList[2];
-        console.log('role is warden' + pastXY);
     }
     
     let arrayDir = [];
-    console.log('yourturn activated');
+    console.log('start timer');
     var interval = setInterval(function(){
-        document.getElementById('timer').innerHTML = counter-1
         if(role == 'prisoner'){
             curXY = document.querySelector(".ppresentXY").classList[2]; 
         }else{
             curXY = document.querySelector(".wpresentXY").classList[2]; 
         }
         counter--;
-        if(pastXY != curXY) clearInterval(interval);
+        document.getElementById('timer').innerHTML = counter
+        if(pastXY != curXY) {
+            clearInterval(interval);
+            document.getElementById('timer').innerHTML = "--"
+        }
         if (counter == 0 && (pastXY == curXY)){
             if (direction.right) arrayDir.push('right');
             if (direction.down) arrayDir.push('down');
             if (direction.up) arrayDir.push('up');
             if (direction.left) arrayDir.push('left');
             const randomDir = arrayDir[Math.floor(Math.random() * arrayDir.length)];
-            socket.emit('movePosition', randomDir);
+            move(randomDir)
             clearInterval(interval);
         }
         if(counter==0) {
-            clearInterval(interval);
             document.getElementById('timer').innerHTML = "--"
+            clearInterval(interval);
         }
     },1000)
 })
@@ -241,16 +242,46 @@ const setTposition = (position) =>{
 
 window.addEventListener('keydown', (e) => {
     var key = e.keyCode;
-    //down
-    if (key == 40 || key == 83) socket.emit('movePosition','down')
-    //up 
-    if (key == 38 || key == 87) socket.emit('movePosition','up')
-    //left
-    if (key == 37 || key == 65) socket.emit('movePosition','left')
-    //right
-    if (key == 39 || key == 68) socket.emit('movePosition','right')
-    //enter 
+    if (key == 40 || key == 83) move('down')
+    if (key == 38 || key == 87) move('up')
+    if (key == 37 || key == 65) move('left')
+    if (key == 39 || key == 68) move('right')
     if (key == 13) sendMessage()
-    //esc 
     if (key == 27) console.log('escape')
 }, true)
+
+const move = (controller) => {
+    socket.emit('movePosition',controller)
+    document.getElementById('timer').innerHTML = "--"
+}
+
+const music = (e) => {
+    const source = document.getElementById("musicsource")
+    const audio = document.getElementById("audio")
+    switch (e) {
+        case 1: {
+            source.setAttribute("src","./musics/music1.mp3")
+            hide("music1")
+            show("music2")
+            show("music3")
+            break
+        }
+        case 2: {
+            source.setAttribute("src","./musics/music2.mp3")
+            show("music1")
+            hide("music2")
+            show("music3")
+            break
+        }
+        case 3: {
+            source.setAttribute("src","./musics/music3.mp3")
+            show("music1")
+            show("music2")
+            hide("music3")
+            break
+        }
+    }
+    audio.load()
+    audio.play()
+
+}

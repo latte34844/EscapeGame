@@ -52,6 +52,9 @@ app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.get('/', function (req, res) {
     res.sendFile(path_1.default.join(__dirname, "../public/login.html"));
 });
+app.post('/leave', function (req, res) {
+    res.redirect('/');
+});
 app.post('/client', function (req, res) {
     res.redirect('/client' + '?user=' + req.body.username + '&room=' + req.body.room);
     // console.log(req.body.username)
@@ -125,8 +128,6 @@ io.on('connection', function (socket) {
             }
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
             console.log('send your turn');
-            //io to p and w , there rolw
-            //io to p and w, who join
         }
     });
     socket.on('disconnect', function () {
@@ -210,7 +211,7 @@ io.on('connection', function (socket) {
                             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
                             io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
                             io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
-                            io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
+                            io.to(user.userId).emit('yourTurn', game.getAvailableDirection(user), user.userRole);
                             return [4 /*yield*/, game.delay(50)];
                         case 3:
                             _b.sent();
