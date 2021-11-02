@@ -18,6 +18,10 @@ app.get('/', (req:Request,res:Response)=>{
     res.sendFile(path.join(__dirname,"../public/login.html"))
 });
 
+app.post('/leave', (req:Request,res:Response)=>{
+    res.redirect('/')
+});
+
 app.post('/client', (req:Request,res:Response)=>{
     res.redirect('/client' + '?user=' + req.body.username + '&room=' + req.body.room)
     // console.log(req.body.username)

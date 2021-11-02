@@ -8,8 +8,6 @@ for(const control of document.querySelectorAll(".control")){
 }
 
 
-
-
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
     console.log(controller)

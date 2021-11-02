@@ -52,6 +52,9 @@ app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.get('/', function (req, res) {
     res.sendFile(path_1.default.join(__dirname, "../public/login.html"));
 });
+app.post('/leave', function (req, res) {
+    res.redirect('/');
+});
 app.post('/client', function (req, res) {
     res.redirect('/client' + '?user=' + req.body.username + '&room=' + req.body.room);
     // console.log(req.body.username)
