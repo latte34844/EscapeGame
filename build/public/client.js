@@ -148,7 +148,7 @@ socket.on('clear', room => {
 })
 
 socket.on('yourTurn', (direction, role)=>{
-    console.log('your turn ')
+    console.log('your turn')
     var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){
@@ -251,3 +251,34 @@ window.addEventListener('keydown', (e) => {
     //esc 
     if (key == 27) console.log('escape')
 }, true)
+
+const music = (e) => {
+    const source = document.getElementById("musicsource")
+    const audio = document.getElementById("audio")
+    switch (e) {
+        case 1: {
+            source.setAttribute("src","./musics/music1.mp3")
+            hide("music1")
+            show("music2")
+            show("music3")
+            break
+        }
+        case 2: {
+            source.setAttribute("src","./musics/music2.mp3")
+            show("music1")
+            hide("music2")
+            show("music3")
+            break
+        }
+        case 3: {
+            source.setAttribute("src","./musics/music3.mp3")
+            show("music1")
+            show("music2")
+            hide("music3")
+            break
+        }
+    }
+    audio.load()
+    audio.play()
+
+}

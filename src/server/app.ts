@@ -103,8 +103,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
             console.log('send your turn')
-            //io to p and w , there rolw
-            //io to p and w, who join
             
         }       
     })
