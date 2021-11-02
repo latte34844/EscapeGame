@@ -7,7 +7,6 @@ for(const control of document.querySelectorAll(".control")){
     })
 }
 
-
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
     console.log(controller)
@@ -34,12 +33,10 @@ socket.on('tPosition', position =>{
 
 socket.on('greeting', greeting =>{
     if(greeting === 'spectator'){
-        //alert with chat box
-        alert('the room is full')
+        sendActivity('The room is full.')
+        sendActivity('You will be a spectator.')
     }else{
-        //alert with chat box => wait for another player
-        alert('Your role is '+ greeting)
-        console.log('role:', greeting)
+        sendActivity('Your role is '+ greeting+'.')
     }  
 })
 
@@ -52,7 +49,7 @@ socket.on('score', score => {
 })
 
 socket.on('win', e => {
-    alert(e)
+    sendActivity(e)
 })
 
 socket.on('direction', direction => {
@@ -73,6 +70,15 @@ const incOpacity = 1;
 function hide(id) {
     document.getElementById(id).disabled = true;
     document.getElementById(id).style.opacity = redOpacity;
+}
+
+function sendActivity(message) {
+    var item = document.createElement('li')
+    item.className="mchat"
+    item.style.color="red"
+    item.textContent = message
+    document.getElementById('messages').appendChild(item)
+    scrollChatWindow()
 }
 
 function sendMessage() {
@@ -146,7 +152,7 @@ socket.on('clear', room => {
 })
 
 socket.on('yourTurn', (direction, role)=>{
-    console.log('your turn ')
+    console.log('your turn')
     var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){
@@ -249,3 +255,34 @@ window.addEventListener('keydown', (e) => {
     //esc 
     if (key == 27) console.log('escape')
 }, true)
+
+const music = (e) => {
+    const source = document.getElementById("musicsource")
+    const audio = document.getElementById("audio")
+    switch (e) {
+        case 1: {
+            source.setAttribute("src","./musics/music1.mp3")
+            hide("music1")
+            show("music2")
+            show("music3")
+            break
+        }
+        case 2: {
+            source.setAttribute("src","./musics/music2.mp3")
+            show("music1")
+            hide("music2")
+            show("music3")
+            break
+        }
+        case 3: {
+            source.setAttribute("src","./musics/music3.mp3")
+            show("music1")
+            show("music2")
+            hide("music3")
+            break
+        }
+    }
+    audio.load()
+    audio.play()
+
+}

@@ -107,8 +107,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
             console.log('send your turn')
-            //io to p and w , there rolw
-            //io to p and w, who join
             
         }       
     })
@@ -176,7 +174,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
             (async () => { 
 
-        
                 await game.delay(50);
 
                 // TODO
@@ -238,7 +235,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('adminResetGame', room =>{
         (async () => { 
 
-        
+
             await game.delay(50);
 
         game.resetRole(room)
