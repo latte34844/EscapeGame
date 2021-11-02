@@ -387,4 +387,19 @@ export class Game {
         let user2_y = +user2Position.split('')[3]
         
     }
+
+    deleteUser(userId:string){
+        let user = this.users.find((u:User) => u.userId === userId)
+        if(!user){
+            console.log('does not exist')
+        }else{
+            if(user.userRole != 'spectator'){
+                this.rooms[user.userRoom][user.userRole] = ''
+            }else{
+                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(user => user.userId != userId) 
+            }
+            this.users = this.users.filter(user => user.userId != userId)
+        }
+        
+    }
 }

@@ -83,6 +83,7 @@ io.on('connection', function (socket) {
             game.setTurn(room, 1);
             if (greeting != 'spectator') {
                 io.emit('adminRoom', game.rooms);
+                io.emit('clear', game.rooms[room]);
                 oPositions = game.createRoomObstacle(room);
                 tPosition = game.createTunnel(room);
                 while (true) {
@@ -121,6 +122,8 @@ io.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
         console.log('disconnect: ', socket.id);
+        game.deleteUser(socket.id);
+        console.log(game.users);
         io.emit('population', game.users);
     });
     socket.on('movePosition', function (controller) {
@@ -208,6 +211,7 @@ io.on('connection', function (socket) {
                     case 1:
                         _b.sent();
                         game.resetRole(room);
+                        game.setScore(room, 0, 0);
                         _a = game.restartGame(room), oPositions = _a.oPositions, tPosition = _a.tPosition, pPosition = _a.pPosition, wPosition = _a.wPosition;
                         prisoner = game.getPrisoner(room);
                         warden = game.getWarden(room);

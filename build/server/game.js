@@ -381,6 +381,21 @@ var Game = /** @class */ (function () {
         var user2_x = +user2Position.split('')[1];
         var user2_y = +user2Position.split('')[3];
     };
+    Game.prototype.deleteUser = function (userId) {
+        var user = this.users.find(function (u) { return u.userId === userId; });
+        if (!user) {
+            console.log('does not exist');
+        }
+        else {
+            if (user.userRole != 'spectator') {
+                this.rooms[user.userRoom][user.userRole] = '';
+            }
+            else {
+                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(function (user) { return user.userId != userId; });
+            }
+            this.users = this.users.filter(function (user) { return user.userId != userId; });
+        }
+    };
     return Game;
 }());
 exports.Game = Game;

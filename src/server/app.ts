@@ -53,6 +53,10 @@ io.on('connection', (socket: socketIO.Socket) => {
             
             if(greeting != 'spectator'){
                 io.emit('adminRoom' ,game.rooms)
+
+                io.emit('clear', game.rooms[room])
+        
+
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
                 while(true){
@@ -96,7 +100,8 @@ io.on('connection', (socket: socketIO.Socket) => {
 
     socket.on('disconnect', () => {
         console.log('disconnect: ', socket.id)
-
+        game.deleteUser(socket.id)
+        console.log(game.users)
         io.emit('population' ,game.users)
     })
 
@@ -200,6 +205,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             await game.delay(50);
 
         game.resetRole(room)
+        game.setScore(room,0,0)
         let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
 
                 let prisoner = game.getPrisoner(room)
