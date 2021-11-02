@@ -188,7 +188,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 prisoner = game.getPrisoner(room)
                 warden = game.getWarden(room)
-                let spectators = game.getSpectator(room)
 
                 io.to(room).emit('score', game.getScore(room))
                 io.to(room).emit('clear', game.rooms[room])
@@ -207,7 +206,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
                 io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
-                io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
+                io.to(user.userId).emit('yourTurn', game.getAvailableDirection(user), user.userRole)
 
                 await game.delay(50)
 

@@ -203,7 +203,7 @@ io.on('connection', function (socket) {
                             io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
                             io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
                             io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
-                            io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
+                            io.to(user.userId).emit('yourTurn', game.getAvailableDirection(user), user.userRole);
                             return [4 /*yield*/, game.delay(50)];
                         case 3:
                             _b.sent();
