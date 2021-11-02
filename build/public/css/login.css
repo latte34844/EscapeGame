@@ -1,0 +1,184 @@
+@import url('http://fonts.cdnfonts.com/css/hall-fetica-wide');
+@import url('http://fonts.cdnfonts.com/css/games');
+*{
+   /* border:solid red 2px; */
+   font-family: 'Hall Fetica Wide', sans-serif;
+}
+::-webkit-input-placeholder {
+    color: grey;
+    font-size:15px;
+  }
+body{
+    position:relative;
+    top:50px;
+    background-color:black !important;
+    background:
+    linear-gradient(whitesmoke,black) calc(0.5*100%/10),
+    linear-gradient(whitesmoke,black) calc(1.5*100%/10),
+    linear-gradient(whitesmoke,black) calc(2.5*100%/10),
+
+    linear-gradient(whitesmoke,black) calc(7.5*100%/10),
+    linear-gradient(whitesmoke,black) calc(8.5*100%/10),
+    linear-gradient(whitesmoke,black) calc(9.5*100%/10);
+  background-size:20px 100%;
+  background-repeat:no-repeat;
+}
+h1{
+    color:white;
+}
+#title{
+    text-align: center;
+    color:whitesmoke;
+    font-family: 'Games', sans-serif;
+    font-size:80px;
+    position:relative;
+    top:-200px;
+}
+#login{
+    position:relative;
+    top:30px;
+    text-align:center;
+}
+#wrap{
+    text-align:center;
+    display:block;
+    width:80%;
+    height:450px;
+    margin:0 auto;
+    background-color: #b16101;
+    border-radius: 20px;
+}
+#wrap2{
+    width:95%;
+    margin:0 auto;
+}
+#input-wrap{
+    margin:0 auto;
+    width:70%;
+    position:relative;
+    top:33px;
+}
+#form-wrap{
+    width:45%;
+    float:right;
+}
+#ready{
+  font-size:40px;
+  padding:8px;
+  border-radius:20px;
+  background-color:black;
+}
+#howto-wrap{
+    width:40%;
+    float:left;
+    position:absolute;
+    top:0px;
+}
+#howto-wrap h1{
+    font-size:50px;
+    text-align:center;
+    position:relative;
+    top:10px;
+}
+label{
+    color:whitesmoke;
+    padding: 10px 10px;
+    float:left;
+}
+input{
+    width:100%;
+    border-radius:20px;
+    padding: 10px 15px;
+    background-color:black;
+    color: grey;
+    font-size:3px;
+}
+#form-wrap button{
+    width:100%;
+    height:50px;
+    background-color:black;
+    color:whitesmoke;
+    position:relative;
+    top:80px;
+    padding:10px;
+    border-radius:20px;
+    border-style: solid;
+    border: solid black 3px;
+    font-family: 'Games', sans-serif;
+    transition: background-color 0.6s ease;
+}
+#form-wrap button:hover {
+  color:black;
+  background-color:#b16101;
+}
+
+.slides {
+	display:none;
+}
+#first{
+	display:block;
+}
+img {
+	vertical-align: middle;
+}
+.slideshow-container {
+  width:430px;
+  margin: auto;
+  position:relative;
+  top:25px;
+}
+.prev, .next {
+  cursor: pointer;
+  padding: 16px;
+  position:relative;
+  top:-170px;
+  text-decoration: none;
+  margin-top: -22px;
+  color: white;
+  font-size: 18px;
+  transition: 0.6s ease;
+  background-color: rgba(0,0,0,0.8);
+}
+.prev{
+  float:left;
+  position:relative;
+  left:-50px;
+}
+.next{
+  float:right;
+  position:relative;
+  left:50px;
+}
+.next {
+  right: 0;
+	z-index:1;
+  border-radius: 0 0 0 0;
+}
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+.dot {
+  position:relative;
+  top:10px;
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+.active, .dot:hover {
+  background-color:black;
+}
+#picture{
+  position:relative;
+  top:25px;
+}

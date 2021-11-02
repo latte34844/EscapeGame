@@ -141,3 +141,72 @@ button:hover {
 #timer {
   text-align: center;
 }
+#form {
+  background: rgba(0,0,0,0.15);
+  padding: 0.25rem; 
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  height: 3rem;
+  box-sizing: border-box;
+  backdrop-filter: blue(10px);
+}
+
+#input {
+  border: none;
+  padding: 0 1rem;
+  flex-grow: 1;
+  border-radius: 2rem;
+  margin: 0.25rem;
+}
+
+#input.focus {
+  outline: none;
+}
+
+#form > button {
+  background: #333;
+  border: none;
+  padding: 0 1rem;
+  margin: 0.25rem;
+  border-radius: 3px;
+  outline: none; 
+  color: #fff;
+}
+
+.chatPanel {
+  height: 300px;
+  width: 30%;
+  /* margin-right: 1000px; */
+  border: solid 1px gray;
+  margin-top: -339px;
+  margin-left: 20px;
+  border-radius: 20px 0px 4px 4px;
+  background: #fff;
+  /* background: linear-gradient(
+      56deg,
+      rgba(34, 193, 195, 0.49193275943189773) 0%,
+      rgba(253, 187, 45, 0.494733879880077) 100%
+  ); */
+  position: relative;
+}
+
+.chat {
+  margin-left: -20px;
+  font-style: normal;
+  color: #0000ff;
+}
+
+.mchat {
+  margin-left: -20px;
+  font-style: normal;
+}
+
+
+
+#messages {
+  overflow: hidden;
+  height: 236px;
+}
+
