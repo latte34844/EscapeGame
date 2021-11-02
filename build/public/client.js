@@ -46,7 +46,7 @@ socket.on('greeting', greeting =>{
 })
 
 socket.on('role', role => {
-    document.getElementById("role").innerHTML = `role: ${role}`
+    document.getElementById("role").innerHTML = `your role: ${role}`
 })
 
 socket.on('score', score => {
