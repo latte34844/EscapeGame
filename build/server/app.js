@@ -116,6 +116,8 @@ io.on('connection', function (socket) {
                 io.to(user.userId).emit('wPosition', wPosition);
                 io.to(user.userId).emit('tPosition', tPosition);
                 io.to(user.userId).emit('oPositions', oPositions);
+                io.to(user.userId).emit('role', user.userRole);
+                io.to(user.userId).emit('turn', game.getTurn(prisoner, warden));
                 console.log('send spectator');
             }
             //io to p and w , there rolw
@@ -153,6 +155,10 @@ io.on('connection', function (socket) {
         io.to(warden.userId).emit('direction', game.getAvailableDirection(warden));
         io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
         io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
+        game.rooms[room].spectators.forEach(function (spectator) {
+            var u = game.fetchUser(spectator.userId);
+            io.to(u.userId).emit('turn', game.getTurn(prisoner, warden));
+        });
         if (user.userRole == 'prisoner') {
             io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
         }
@@ -173,6 +179,8 @@ io.on('connection', function (socket) {
                             game.win(user);
                             io.to(room).emit('win', user.userName + " wins the game as " + user.userRole);
                             _a = game.restartGame(room), oPositions = _a.oPositions, tPosition = _a.tPosition, pPosition = _a.pPosition, wPosition = _a.wPosition;
+                            prisoner = game.getPrisoner(room);
+                            warden = game.getWarden(room);
                             spectators = game.getSpectator(room);
                             io.to(room).emit('score', game.getScore(room));
                             io.to(room).emit('clear', game.rooms[room]);
@@ -190,7 +198,7 @@ io.on('connection', function (socket) {
                             io.to(prisoner.userId).emit('turn', game.getTurn(prisoner, warden));
                             io.to(warden.userId).emit('turn', game.getTurn(prisoner, warden));
                             return [4 /*yield*/, game.delay(50)];
-                        case 6:
+                        case 3:
                             _b.sent();
                             if (spectators) {
                                 game.rooms[room].spectators.forEach(function (spectator) {
