@@ -148,6 +148,7 @@ socket.on('clear', room => {
 })
 
 socket.on('yourTurn', (direction, role)=>{
+    console.log('your turn ')
     var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){

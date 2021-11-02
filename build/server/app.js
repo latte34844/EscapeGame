@@ -120,6 +120,8 @@ io.on('connection', function (socket) {
                 io.to(user.userId).emit('turn', game.getTurn(prisoner, warden));
                 console.log('send spectator');
             }
+            io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden');
+            console.log('send your turn');
             //io to p and w , there rolw
             //io to p and w, who join
         }
