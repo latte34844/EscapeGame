@@ -181,7 +181,7 @@ io.on('connection', function (socket) {
         }
         if (checkWin) {
             (function () { return __awaiter(void 0, void 0, void 0, function () {
-                var _a, oPositions, tPosition, pPosition, wPosition, spectators;
+                var _a, oPositions, tPosition, pPosition, wPosition;
                 return __generator(this, function (_b) {
                     switch (_b.label) {
                         case 0: return [4 /*yield*/, game.delay(50)];
@@ -195,7 +195,6 @@ io.on('connection', function (socket) {
                             _a = game.restartGame(room), oPositions = _a.oPositions, tPosition = _a.tPosition, pPosition = _a.pPosition, wPosition = _a.wPosition;
                             prisoner = game.getPrisoner(room);
                             warden = game.getWarden(room);
-                            spectators = game.getSpectator(room);
                             io.to(room).emit('score', game.getScore(room));
                             io.to(room).emit('clear', game.rooms[room]);
                             return [4 /*yield*/, game.delay(100)];
