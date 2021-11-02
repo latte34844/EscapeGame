@@ -30,6 +30,10 @@ socket.on('tPosition', position =>{
     setTposition(position)
 })
 
+socket.on('hPosition', position => {
+    console.log('hidden treasure', position)
+})
+
 socket.on('greeting', greeting =>{
     if(greeting === 'spectator'){
         sendActivity('The room is full.')
@@ -50,8 +54,9 @@ socket.on('score', score => {
 socket.on('win', e => {
     sendActivity(e)
 })
+
 socket.on('foundTreasure', e =>{
-    alert(e)
+    sendActivity(e)
 })
 
 socket.on('direction', direction => {
@@ -151,7 +156,6 @@ socket.on('clear', room => {
 })
 
 socket.on('yourTurn', (direction, role) => {
-    console.log('your turn')
     var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){
@@ -199,6 +203,7 @@ function show(id) {
 }
 
 const setPposition = (position) =>{
+    console.log('prisoner position', position);
     const pastXY = document.querySelector(".ppresentXY");
     if(pastXY !== null){
         pastXY.innerHTML= '';
@@ -207,11 +212,11 @@ const setPposition = (position) =>{
     const xy = document.querySelector("." + position);
     xy.classList.add('ppresentXY')
     xy.innerHTML='<img class="prisonerImg" src="images/prisoner.png">';
-    console.log('prisoner position ', xy);
 }
 
 
 const setWposition = (position) =>{
+    console.log('warden position', position);
     const pastXY = document.querySelector(".wpresentXY");
     if(pastXY !== null){
         pastXY.innerHTML= '';
@@ -220,24 +225,22 @@ const setWposition = (position) =>{
     const xy = document.querySelector("." + position);
     xy.classList.add('wpresentXY')
     xy.innerHTML='<img class="wardenImg" src="images/warden.png">';
-    console.log('warden position ', xy);
 }
 
 const setOpositions = (positions) =>{
-    console.log(positions)
+    console.log('obstacles position', positions)
     positions.forEach(position =>{
         const xy = document.querySelector("." + position);
         xy.classList.add('obstacle')
         xy.innerHTML='<img class="obsatcleImg" src="images/obstacle.png">';
-        console.log('obstacle position ',xy);
     })
 }
 
 const setTposition = (position) =>{
+    console.log('tunnel position', position)
     const xy = document.querySelector("." + position);
     xy.classList.add('tunnel')
     xy.innerHTML='<img class="tunnelImg" src="images/tunnel.png">';
-    console.log('tunnel position', xy);
 }
 
 window.addEventListener('keydown', (e) => {
