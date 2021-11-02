@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escape Game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="css/client.css">
 </head>
 
@@ -95,12 +94,19 @@
             <button class="control" id="right"><img class="btnImg" src="./images/arrow-right.png" alt="right"></button>
         </div>
     </div>
-    <div id='rs'>
-        <button class="btn reset">Reset</button>
-    </div>
-        
+    <div> 
+        <div class="chatPanel">
+            <ol style="list-style-type:none" id='messages'></ol>
+            <div id="form">
+                <div class="input-group" >
+                    <input id="input" autocomplete="off" placeholder="Enter message here">
+                    <button id='send' onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
+    <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 </body>
 </html>

@@ -57,12 +57,14 @@ export class Game {
         }else{
             role = 'warden'
         }
-
+        if(this.rooms[room][role] === ''){
+            return role
+        }
         if(!this.rooms[room][role]){
             return role
-        }else if(role === 'prisoner' && !this.rooms[room]['warden']){
+        }else if(role === 'prisoner' && (!this.rooms[room]['warden'] || this.rooms[room]['warden'] === '')){
             return 'warden'
-        }else if(role === 'warden' && !this.rooms[room]['prisoner']){
+        }else if(role === 'warden' && (!this.rooms[room]['prisoner'] || this.rooms[room]['prisoner'] === '')){
             return 'prisoner'
         }
         return 'spectator'
@@ -88,6 +90,13 @@ export class Game {
         this.rooms[room].notFree = [...oPositions]
         return oPositions
     }
+
+    // checkInvalidObstacle(room:string){
+    //     //diagonal patterns
+    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
+
+        
+    // }
 
     createTunnel(room:string){
         while(true){
@@ -309,6 +318,15 @@ export class Game {
         return user.userPosition === this.getPrisoner(user.userRoom).userPosition
     }
 
+    swapRole(room: string){
+        let temp1 = this.getWarden(room)
+        let temp2 = this.getPrisoner(room)
+        this.rooms[room].prisoner.userId = temp1.userId
+        temp1.userRole = 'prisoner'
+        this.rooms[room].warden.userId = temp2.userId
+        temp2.userRole = 'warden'
+    }
+
     init(room: string, prisoner: User, warden: User) {
         let oPositions = this.createRoomObstacle(room)
         let tPosition = this.createTunnel(room)
@@ -344,6 +362,22 @@ export class Game {
         return this.init(room, this.getPrisoner(room), this.getWarden(room))
     }
 
+    resetRole(room: string) {
+        console.log('reset role')
+        let temp1 = this.getWarden(room)
+        let temp2 = this.getPrisoner(room)
+        this.rooms[room].prisoner = ''
+        this.rooms[room].warden = ''
+        temp1.userRole = this.createRole(room)
+        this.rooms[room][temp1.userRole]={
+            userId: temp1.userId
+        }
+        temp2.userRole = this.createRole(room)        
+        this.rooms[room][temp2.userRole]={
+            userId : temp2.userId
+        }
+    }
+
     delay(ms: number) {
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
@@ -356,6 +390,21 @@ export class Game {
         let user1_y = +user1Position.split('')[3]
         let user2_x = +user2Position.split('')[1]
         let user2_y = +user2Position.split('')[3]
+        
+    }
+
+    deleteUser(userId:string){
+        let user = this.users.find((u:User) => u.userId === userId)
+        if(!user){
+            console.log('does not exist')
+        }else{
+            if(user.userRole != 'spectator'){
+                this.rooms[user.userRoom][user.userRole] = ''
+            }else{
+                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(user => user.userId != userId) 
+            }
+            this.users = this.users.filter(user => user.userId != userId)
+        }
         
     }
 }

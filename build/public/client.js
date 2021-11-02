@@ -7,9 +7,8 @@ for(const control of document.querySelectorAll(".control")){
     })
 }
 
-document.querySelector("#rs").addEventListener("click", ()=>{
-    socket.emit('reset')
-})
+
+
 
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
@@ -47,7 +46,7 @@ socket.on('greeting', greeting =>{
 })
 
 socket.on('role', role => {
-    document.getElementById("role").innerHTML = `role: ${role}`
+    document.getElementById("role").innerHTML = `your role: ${role}`
 })
 
 socket.on('score', score => {
@@ -71,16 +70,56 @@ socket.on('direction', direction => {
     else hide('left');
 })
 
-socket.on('clear', () => {
-    // TODO
-    // clear object
-})
 const redOpacity = 0.2;
 const incOpacity = 1;
 function hide(id) {
     document.getElementById(id).disabled = true;
     document.getElementById(id).style.opacity = redOpacity;
 }
+
+function sendMessage() {
+    var input = document.getElementById('input');
+    if (input.value) {
+        let message = {
+            message: input.value,
+            from: socket.id
+        }
+        socket.emit('message', message)
+        addChat({
+            message: input.value,
+            from: "you"
+        }, true)
+    }
+    input.value = ''
+}
+
+socket.on('chat', message => {
+    addChat(message, false)
+})
+
+function addChat(message, mychat) {
+    var item = document.createElement('li')
+    if (mychat) {
+        item.className="mchat";
+    } else {
+        item.className="chat";
+    }
+    item.textContent = message.from+": "+message.message
+    document.getElementById('messages').appendChild(item)
+    scrollChatWindow()
+}
+
+const scrollChatWindow = () => {
+    $('#messages').animate({
+        scrollTop: $('#messages li:last-child').position().top,
+    }, 500);
+    setTimeout(() => {
+        let messagesLength = $('#messages li');
+        if (messagesLength.length > 10) {
+            messagesLength.eq(0).remove();
+        }
+    }, 500);
+};
 
 socket.on('clear', room => {
     const pXY = document.querySelector(".ppresentXY");
@@ -93,16 +132,19 @@ socket.on('clear', room => {
         wXY.innerHTML= '';
         wXY.classList.remove('wpresentXY');
     }
-    const obstacles = room.obstacle
-    obstacles.forEach(obstacle => {
-        const oXY = document.querySelector("." + obstacle);
-        oXY.innerHTML= '';
-        oXY.classList.remove('obstacle')
-    })
-    const tunnel = room.tunnel
-    const tXY = document.querySelector("." + tunnel);
-    tXY.innerHTML= '';
-    tXY.classList.remove('tunnel')
+    const pastObstacles = document.querySelectorAll(".obstacle");
+    console.log('pastobstacle', pastObstacles)
+    if (pastObstacles !== null) {
+        pastObstacles.forEach(pastObstacle => {
+            pastObstacle.innerHTML = ''
+            pastObstacle.classList.remove('obstacle')
+        })
+    }
+    const tXY = document.querySelector(".tunnel");
+    if(tXY !== null){
+        tXY.innerHTML= '';
+        tXY.classList.remove('tunnel');
+    }
 })
 
 socket.on('yourTurn', (direction, role)=>{
@@ -177,14 +219,6 @@ const setWposition = (position) =>{
 }
 
 const setOpositions = (positions) =>{
-    const pastObstacles = document.querySelectorAll(".obstacle");
-    console.log('pastobstacle', pastObstacles)
-    if (pastObstacles !== null) {
-        pastObstacles.forEach(pastObstacle => {
-            pastObstacle.innerHTML = ''
-            pastObstacle.classList.remove('obstacle')
-        })
-    }
     console.log(positions)
     positions.forEach(position =>{
         const xy = document.querySelector("." + position);
@@ -195,11 +229,6 @@ const setOpositions = (positions) =>{
 }
 
 const setTposition = (position) =>{
-    const pastXY = document.querySelector(".tunnel");
-    if(pastXY !== null){
-        pastXY.innerHTML= '';
-        pastXY.classList.remove('tunnel');
-    }
     const xy = document.querySelector("." + position);
     xy.classList.add('tunnel')
     xy.innerHTML='<img class="tunnelImg" src="images/tunnel.png">';
@@ -217,7 +246,7 @@ window.addEventListener('keydown', (e) => {
     //right
     if (key == 39 || key == 68) socket.emit('movePosition','right')
     //enter 
-    if (key == 13) console.log('enter')
+    if (key == 13) sendMessage()
     //esc 
     if (key == 27) console.log('escape')
 }, true)

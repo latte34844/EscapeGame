@@ -19,10 +19,12 @@
     "@types/socket.io": "^3.0.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "jquery": "^3.6.0",
     "socket.io": "^4.3.1",
     "socket.io-client": "^4.3.2"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.7",
     "@types/socket.io-client": "^1.4.36",
     "concurrently": "^6.3.0",
     "nodemon": "^2.0.14",
@@ -30,7 +32,11 @@
     "typescript": "^4.4.4"
   },
   "nodemonConfig": {
-    "watch": ["./build/public/css/*.css ","./build/public/images/*.png"],
+    "watch": [
+      "./build/public/css/*.css ",
+      "./build/public/images/*.png",
+      "./build/public"
+    ],
     "ignore": [
       "README.md"
     ],
