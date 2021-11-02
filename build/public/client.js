@@ -7,9 +7,6 @@ for(const control of document.querySelectorAll(".control")){
     })
 }
 
-
-
-
 const handleClick = (controller)=>{
     socket.emit('movePosition',controller)
     console.log(controller)
@@ -36,12 +33,10 @@ socket.on('tPosition', position =>{
 
 socket.on('greeting', greeting =>{
     if(greeting === 'spectator'){
-        //alert with chat box
-        alert('the room is full')
+        sendActivity('The room is full.')
+        sendActivity('You will be a spectator.')
     }else{
-        //alert with chat box => wait for another player
-        alert('Your role is '+ greeting)
-        console.log('role:', greeting)
+        sendActivity('Your role is '+ greeting+'.')
     }  
 })
 
@@ -54,7 +49,7 @@ socket.on('score', score => {
 })
 
 socket.on('win', e => {
-    alert(e)
+    sendActivity(e)
 })
 
 socket.on('direction', direction => {
@@ -75,6 +70,15 @@ const incOpacity = 1;
 function hide(id) {
     document.getElementById(id).disabled = true;
     document.getElementById(id).style.opacity = redOpacity;
+}
+
+function sendActivity(message) {
+    var item = document.createElement('li')
+    item.className="mchat"
+    item.style.color="red"
+    item.textContent = message
+    document.getElementById('messages').appendChild(item)
+    scrollChatWindow()
 }
 
 function sendMessage() {

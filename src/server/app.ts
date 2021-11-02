@@ -170,7 +170,6 @@ io.on('connection', (socket: socketIO.Socket) => {
 
             (async () => { 
 
-        
                 await game.delay(50);
 
                 // TODO
@@ -232,7 +231,7 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('adminResetGame', room =>{
         (async () => { 
 
-        
+
             await game.delay(50);
 
         game.resetRole(room)

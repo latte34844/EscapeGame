@@ -224,3 +224,8 @@ audio::-webkit-media-controls-time-remaining-display {
 #music1 {
   opacity: 0.2;
 }
+
+.achat {
+  margin-left: -20px;
+  font-style: normal;
+}
