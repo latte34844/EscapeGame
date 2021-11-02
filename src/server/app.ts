@@ -51,6 +51,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             let wPosition = warden.userPosition //x6y6
             let oPositions:string[] = []
             let tPosition = ''
+            let hPosition = ''
             game.setScore(room, 0,0)
             game.setLastWinner(room,'warden')
             game.setTurn(room, 1)
@@ -63,6 +64,7 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
+                hPosition = game.createHiddenTreasure(room)
                 while(true){
                     pPosition = game.createUserPosition(prisoner); //x y
                     wPosition = game.createUserPosition(warden); //x y
@@ -91,6 +93,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             }else{
                 oPositions = game.rooms[room].obstacle
                 tPosition = game.rooms[room].tunnel
+                hPosition = game.rooms[room].hiddenTreasure
                 const user = game.fetchUser(socket.id)
 
                 io.to(user.userId).emit('direction', game.getAvailableDirection(user))
@@ -169,7 +172,11 @@ io.on('connection', (socket: socketIO.Socket) => {
         if(user.userRole == 'warden'){
             io.to(prisoner.userId).emit('yourTurn',game.getAvailableDirection(prisoner), 'prisoner');
         }
-
+        if(game.checkHiddenTreasure(user)){
+            game.foundTreasure(user);
+            io.to(room).emit('foundTreasure', `${user.userName} found the treasure as ${user.userRole}`);
+            io.to(room).emit('score', game.getScore(room))
+        }
         if (checkWin) {
 
             (async () => { 

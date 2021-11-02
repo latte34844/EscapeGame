@@ -50,6 +50,9 @@ socket.on('score', score => {
 socket.on('win', e => {
     sendActivity(e)
 })
+socket.on('foundTreasure', e =>{
+    alert(e)
+})
 
 socket.on('direction', direction => {
     if (direction.right) show('right');

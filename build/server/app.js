@@ -81,6 +81,7 @@ io.on('connection', function (socket) {
             var wPosition = warden.userPosition; //x6y6
             var oPositions = [];
             var tPosition = '';
+            var hPosition = '';
             game.setScore(room, 0, 0);
             game.setLastWinner(room, 'warden');
             game.setTurn(room, 1);
@@ -89,6 +90,7 @@ io.on('connection', function (socket) {
                 io.emit('clear', game.rooms[room]);
                 oPositions = game.createRoomObstacle(room);
                 tPosition = game.createTunnel(room);
+                hPosition = game.createHiddenTreasure(room);
                 while (true) {
                     pPosition = game.createUserPosition(prisoner); //x y
                     wPosition = game.createUserPosition(warden); //x y
@@ -112,6 +114,7 @@ io.on('connection', function (socket) {
             else {
                 oPositions = game.rooms[room].obstacle;
                 tPosition = game.rooms[room].tunnel;
+                hPosition = game.rooms[room].hiddenTreasure;
                 var user = game.fetchUser(socket.id);
                 io.to(user.userId).emit('direction', game.getAvailableDirection(user));
                 io.to(user.userId).emit('score', game.getScore(room));
@@ -170,6 +173,11 @@ io.on('connection', function (socket) {
         }
         if (user.userRole == 'warden') {
             io.to(prisoner.userId).emit('yourTurn', game.getAvailableDirection(prisoner), 'prisoner');
+        }
+        if (game.checkHiddenTreasure(user)) {
+            game.foundTreasure(user);
+            io.to(room).emit('foundTreasure', user.userName + " found the treasure as " + user.userRole);
+            io.to(room).emit('score', game.getScore(room));
         }
         if (checkWin) {
             (function () { return __awaiter(void 0, void 0, void 0, function () {

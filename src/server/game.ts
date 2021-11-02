@@ -113,6 +113,23 @@ export class Game {
         }
         
     }
+    createHiddenTreasure(room:string){
+        while(true){
+            let x = Math.floor( Math.random() * 5 ) + 1
+            let y = Math.floor( Math.random() * 5 ) + 1
+            const hPosition = "x" + x.toString() + "y" + y.toString()
+
+            if(!this.rooms[room].notFree.find((nf:string) => nf === hPosition)){
+                // console.log('tunnel ',tPosition)
+                this.rooms[room].hiddenTreasure = hPosition
+                this.rooms[room].notFree.push(hPosition)
+                return hPosition
+            }
+        }
+    }
+
+
+
     createUserPosition(user:User){
         while(true){
             let x = Math.floor( Math.random() * 5 ) + 1;
@@ -318,6 +335,21 @@ export class Game {
         return user.userPosition === this.getPrisoner(user.userRoom).userPosition
     }
 
+    checkHiddenTreasure(user:User){
+        return ((user.userPosition === this.rooms[user.userRoom].hiddenTreasure) && (this.rooms[user.userRoom].hasFoundTreasure === false))
+    }
+
+    foundTreasure(user:User){
+        this.rooms[user.userRoom].hasFoundTreasure = true;
+        let room = user.userRoom
+        let currentScore = this.getScore(room)
+        if (user.userId == this.rooms[room].player1) {
+            this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
+        } else {
+            this.setScore(room, currentScore.player1Score, ++currentScore.player2Score)
+        }
+    }
+
     swapRole(room: string){
         let temp1 = this.getWarden(room)
         let temp2 = this.getPrisoner(room)
@@ -346,6 +378,7 @@ export class Game {
         let room = user.userRoom
         let currentScore = this.getScore(room)
         this.rooms[room].currentTurn = 1;
+        this.rooms[user.userRoom].hasFoundTreasure = false;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
