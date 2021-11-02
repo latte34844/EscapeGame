@@ -1,4 +1,5 @@
 import e from 'cors'
+import { isError } from 'util'
 import {User, Direction, Score, Room} from './interface'
 
 export class Game {
@@ -14,7 +15,7 @@ export class Game {
 
         if(!this.rooms[room]){
             this.rooms[room]= {}
-            console.log('create new room')
+            // console.log('create new room')
         }        
 
         const role = this.createRole(room)
@@ -42,7 +43,7 @@ export class Game {
             userRoom: room, 
             userPosition: 'x6y6'
         })
-        console.log('create user')
+        // console.log('create user')
         return role
         
     }
@@ -84,7 +85,7 @@ export class Game {
                 oPositions.push(oPosition)
             }
         }
-        console.log('obstacles ',oPositions)
+        // console.log('obstacles ',oPositions)
         this.rooms[room].obstacle = oPositions
         this.rooms[room].notFree = [...oPositions]
         return oPositions
@@ -104,7 +105,7 @@ export class Game {
             const tPosition = "x" + x.toString() + "y" + y.toString()
 
             if(!this.rooms[room].notFree.find((nf:string) => nf === tPosition)){
-                console.log('tunnel ',tPosition)
+                // console.log('tunnel ',tPosition)
                 this.rooms[room].tunnel= tPosition
                 this.rooms[room].notFree.push(tPosition)
                 return tPosition
@@ -120,7 +121,7 @@ export class Game {
 
             if(!this.rooms[user.userRoom].notFree.find((nf:string) => nf === userPosition)){
                 user.userPosition = userPosition
-                console.log(this.users)
+                // console.log(this.users)
                 return userPosition
             }
         }
@@ -138,7 +139,7 @@ export class Game {
         let position = user.userPosition
         let x = +position.split('')[1]
         let y = +position.split('')[3]
-        console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
+        // console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
         let pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller){
             case "up":
@@ -166,11 +167,11 @@ export class Game {
         let presentPosition = 'x' + x.toString() + 'y' + y.toString();
         if(this.isYourTurn && (presentPosition != pastPosition) ){
             this.rooms[user.userRoom].currentTurn++;
-            console.log(this.rooms[user.userRoom].currentTurn);
+            // console.log(this.rooms[user.userRoom].currentTurn);
         }
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
-        console.log(position)
+        // console.log(position)
         
         return position
     }
@@ -258,7 +259,6 @@ export class Game {
         if (this.rooms[room].obstacle.includes(pos)) return false 
         if (pos === this.getWarden(room).userPosition) return false
         return true
-        
     }
 
     getAvailableDirection(user: User):Direction{
@@ -350,7 +350,12 @@ export class Game {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
             this.setScore(room, currentScore.player1Score, ++currentScore.player2Score)
+        } if(user.userRole == 'prisoner'){
+            this.setLastWinner(room, 'prisoner');
+        }else{
+            this.setLastWinner(room, 'warden');
         }
+        
     }
 
     restartGame(room: string) {

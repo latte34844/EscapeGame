@@ -147,14 +147,45 @@ socket.on('clear', room => {
     }
 })
 
-socket.on('yourTurn',()=>{
-    var counter = 10;
+socket.on('yourTurn', (direction, role)=>{
+    var counter = 11;
+    let pastXY,curXY;
+    if(role == 'prisoner'){
+        pastXY = document.querySelector(".ppresentXY").classList[2];
+        console.log('role is prisoner' + pastXY);
+    }else{
+        pastXY = document.querySelector(".wpresentXY").classList[2];
+        console.log('role is warden' + pastXY);
+    }
+    
+    let arrayDir = [];
+    console.log('yourturn activated');
     var interval = setInterval(function(){
-        counter--;
-        if (counter == 0){
-            clearInterval(interval);
-            socket.emit('passTurn');
+        console.log(counter);
+        if(role == 'prisoner'){
+            curXY = document.querySelector(".ppresentXY").classList[2]; 
+            console.log('pastXY = '+ pastXY);
+            console.log('curXY = '+ curXY);
+        }else{
+            curXY = document.querySelector(".wpresentXY").classList[2]; 
+            console.log('pastXY = ' + pastXY);
+            console.log('curXY = ' + curXY);
         }
+        counter--;
+        if(pastXY != curXY) clearInterval(interval);
+        if (counter == 0 && (pastXY == curXY)){
+            console.log('pastXY = ' + pastXY);
+            console.log('curXY = ' + curXY);
+            if (direction.right) arrayDir.push('right');
+            if (direction.down) arrayDir.push('down');
+            if (direction.up) arrayDir.push('up');
+            if (direction.left) arrayDir.push('left');
+            const randomDir = arrayDir[Math.floor(Math.random() * arrayDir.length)];
+            console.log(randomDir + ' randomed');
+            socket.emit('movePosition', randomDir);
+            clearInterval(interval);
+        }
+        if(counter==0) clearInterval(interval);
     },1000)
 })
 
@@ -177,6 +208,7 @@ const setPposition = (position) =>{
     xy.innerHTML='<img class="prisonerImg" src="images/prisoner.png">';
     console.log('prisoner position ', xy);
 }
+
 
 const setWposition = (position) =>{
     const pastXY = document.querySelector(".wpresentXY");
