@@ -1,8 +1,15 @@
 const socket = io();
 const params = new URLSearchParams(window.location.search)
 
-var aud = document.getElementById("audio")
-aud.volume = 0.8
+const aud = document.getElementById("audio")
+aud.volume = 0.1
+
+document.addEventListener('click', initAudio)
+
+function initAudio(){
+    aud.play()
+    document.removeEventListener('click', initAudio)
+}
 
 $(document).ready(function() {
     $('#cross').hide();		
@@ -139,14 +146,22 @@ function addChat(message, mychat) {
     scrollChatWindow()
 }
 
+const chatAudio = new Audio("./musics/POP1.mp3")
+chatAudio.volume = 0.5
+const playChatAudio = () => {
+    chatAudio.play()
+    chatAudio.currentTime=0
+}
+
 const scrollChatWindow = () => {
+    playChatAudio()
     $('#messages').animate({
         scrollTop: $('#messages li:last-child').position().top,
     }, 500);
     setTimeout(() => {
         let messagesLength = $('#messages li');
         if (messagesLength.length > 27) {
-            messagesLength.eq(0).remove();
+            messagesLength.eq(1).remove();
         }
     }, 500);
 };
@@ -176,9 +191,10 @@ socket.on('clear', room => {
     }
 })
 
+const enterTURN = new Audio("musics/enterturn.mp3")
+enterTURN.volume = 0.3
 socket.on('yourTurn', (direction, role)=>{
     console.log('your turn')
-    const enterTURN = new Audio("musics/enterturn.mp3")
     enterTURN.play()
     var counter = 11;
     let pastXY,curXY;
@@ -226,13 +242,15 @@ function show(id) {
     document.getElementById(id).style.opacity = incOpacity;
 }
 
+const footStep = new Audio("musics/footstep.mp3")
+footStep.volume = 0.7
+
 const setPposition = (position) =>{
     console.log('prisoner position', position);
     const pastXY = document.querySelector(".ppresentXY");
     if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('ppresentXY');
-        const footStep = new Audio("musics/footstep.mp3")
         footStep.play()
     }
     const xy = document.querySelector("." + position);
@@ -240,14 +258,12 @@ const setPposition = (position) =>{
     xy.innerHTML='<img class="prisonerImg" src="images/prisoner.png">';
 }
 
-
 const setWposition = (position) =>{
     console.log('warden position', position);
     const pastXY = document.querySelector(".wpresentXY");
     if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('wpresentXY');
-        const footStep = new Audio("musics/footstep.mp3")
         footStep.play()
     }
     const xy = document.querySelector("." + position);
