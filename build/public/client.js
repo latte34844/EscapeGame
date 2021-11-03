@@ -1,6 +1,24 @@
 const socket = io();
 const params = new URLSearchParams(window.location.search)
 
+$(document).ready(function() {
+    $('#cross').hide();		
+    $("#navbar").animate({ "top": "0" }, 2000);
+   window.onbeforeunload = function () {
+       window.scrollTo(0, 0);
+   }
+
+   $('#menu').on('click',function(){
+        $('.chatPanel').animate({ "opacity": 1 }, 'fast');
+        $('#menu').hide();	   
+        $('#cross').show();
+    });
+    $('#cross').on('click',function(){
+        $('.chatPanel').animate({ "opacity": 0 }, 'fast');
+        $('#cross').hide();	   
+        $('#menu').show();
+    });
+}); 
 for(const control of document.querySelectorAll(".control")){
     control.addEventListener("click", function(){
         handleClick(this.getAttribute('id'))
@@ -44,7 +62,7 @@ socket.on('greeting', greeting =>{
 })
 
 socket.on('role', role => {
-    document.getElementById("role").innerHTML = `your role: ${role}`
+    document.getElementById("role").innerHTML = `You are a <span style="color:red">${role}</span>`
 })
 
 socket.on('score', score => {
