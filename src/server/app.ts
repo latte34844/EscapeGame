@@ -118,6 +118,11 @@ io.on('connection', (socket: socketIO.Socket) => {
 
     socket.on('disconnect', () => {
         console.log('disconnect: ', socket.id)
+        const user = game.fetchUser(socket.id)
+        io.to(user.userRoom).emit('dc', <Message>{
+            from: user.userName,
+            message: "disconnected"
+        })
         game.deleteUser(socket.id)
         io.emit('population' ,game.users)
     })

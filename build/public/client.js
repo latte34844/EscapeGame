@@ -98,6 +98,10 @@ socket.on('direction', direction => {
     else hide('left');
 })
 
+socket.on('dc', message => {
+    sendActivity(message.from+' has '+ message.message+'.')
+})
+
 const redOpacity = 0.2;
 const incOpacity = 1;
 function hide(id) {
