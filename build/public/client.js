@@ -2,23 +2,14 @@ const socket = io();
 const params = new URLSearchParams(window.location.search)
 
 const aud = document.getElementById("audio")
-aud.volume = 0.2
+aud.volume = 0.1
 
 document.addEventListener('click', initAudio)
-document.addEventListener('keypress', e => initAudio2(e))
 
 function initAudio(){
     aud.play()
     document.removeEventListener('click', initAudio)
 }
-
-function initAudio2(e){
-    if (e.key === 'Enter'){
-        playChatAudio()
-        document.addEventListener('keypress', e => initAudio2(e))
-    }
-}
-
 
 $(document).ready(function() {
     $('#cross').hide();		
@@ -155,8 +146,9 @@ function addChat(message, mychat) {
     scrollChatWindow()
 }
 
+const chatAudio = new Audio("./musics/POP1.mp3")
+chatAudio.volume = 0.5
 const playChatAudio = () => {
-    const chatAudio = new Audio("./musics/POP1.WAV")
     chatAudio.play()
     chatAudio.currentTime=0
 }
@@ -199,9 +191,10 @@ socket.on('clear', room => {
     }
 })
 
+const enterTURN = new Audio("musics/enterturn.mp3")
+enterTURN.volume = 0.3
 socket.on('yourTurn', (direction, role)=>{
     console.log('your turn')
-    const enterTURN = new Audio("musics/enterturn.mp3")
     enterTURN.play()
     var counter = 11;
     let pastXY,curXY;
@@ -249,13 +242,15 @@ function show(id) {
     document.getElementById(id).style.opacity = incOpacity;
 }
 
+const footStep = new Audio("musics/footstep.mp3")
+footStep.volume = 0.7
+
 const setPposition = (position) =>{
     console.log('prisoner position', position);
     const pastXY = document.querySelector(".ppresentXY");
     if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('ppresentXY');
-        const footStep = new Audio("musics/footstep.mp3")
         footStep.play()
     }
     const xy = document.querySelector("." + position);
@@ -263,14 +258,12 @@ const setPposition = (position) =>{
     xy.innerHTML='<img class="prisonerImg" src="images/prisoner.png">';
 }
 
-
 const setWposition = (position) =>{
     console.log('warden position', position);
     const pastXY = document.querySelector(".wpresentXY");
     if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('wpresentXY');
-        const footStep = new Audio("musics/footstep.mp3")
         footStep.play()
     }
     const xy = document.querySelector("." + position);
