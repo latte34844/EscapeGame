@@ -76,19 +76,89 @@ export class Game {
   }
 
   createRoomObstacle(room: string) {
-    const oPositions: string[] = [];
-    while (oPositions.length < 5) {
-      let x = Math.floor(Math.random() * 5) + 1;
-      let y = Math.floor(Math.random() * 5) + 1;
+    var oPositions: string[] = [];
+    var checker: boolean = true;
+    var attempt: number = 1;
+    while (checker) {
+      console.log("create obstacle attempt", attempt);
+      oPositions = [];
+      while (oPositions.length < 5) {
+        let x = Math.floor(Math.random() * 5) + 1;
+        let y = Math.floor(Math.random() * 5) + 1;
 
-      const oPosition = "x" + x.toString() + "y" + y.toString();
-      if (!oPositions.find((o) => o === oPosition)) {
-        oPositions.push(oPosition);
+        const oPosition = "x" + x.toString() + "y" + y.toString();
+        if (!oPositions.find((o) => o === oPosition)) {
+          oPositions.push(oPosition);
+        }
       }
+      console.log("obstacles ", oPositions);
+      this.rooms[room].obstacle = oPositions;
+      this.rooms[room].notFree = [...oPositions];
+      console.log("check Invalid");
+      checker = this.checkInvalidObstacle(room);
+      console.log(" -> checker:", checker);
+      attempt++;
     }
-    this.rooms[room].obstacle = oPositions;
-    this.rooms[room].notFree = [...oPositions];
     return oPositions;
+  }
+
+  checkInvalidObstacle(room: string) {
+    //check if all obstacles are in same row or colums
+    const oPositions: string[] = this.rooms[room].obstacle;
+
+    const rows: string[] = [];
+    const columns: string[] = [];
+
+    for (let i = 0; i < 5; i++) {
+      rows.push(oPositions[i].charAt(1));
+      columns.push(oPositions[i].charAt(3));
+    }
+    const sameRows: boolean = rows.every((v) => v === rows[0]);
+    const sameColumns: boolean = columns.every((v) => v === columns[0]);
+
+    console.log(" -> sameRows: ", sameRows);
+    console.log(" -> sameColums: ", sameColumns);
+
+    if (sameRows) return true;
+    if (sameColumns) return true;
+
+    //check if all obstcles are in same diagonal
+    const diagonal_level2: string[][] = [
+      ["x2y1", "x1y2"],
+      ["x5y4", "x4y5"],
+      ["x4y1", "x5y2"],
+      ["x1y4", "x2y5"],
+    ];
+    const diagonal_level3: string[][] = [
+      ["x3y1", "x2y2", "x1y3"],
+      ["x5y3", "x4y4", "x3y5"],
+      ["x3y1", "x4y2", "x5y3"],
+      ["x1y3", "x2y4", "x3y5"],
+    ];
+    const diagonal_level4: string[][] = [
+      ["x4y1", "x3y2", "x2y3", "x1y1"],
+      ["x3y2", "x4y3", "x3y4", "x2y5"],
+      ["x2y1", "x3y2", "x4y3", "x5y4"],
+      ["x1y2", "x2y3", "x3y4", "x4y5"],
+    ];
+    const diagonal_level5: string[][] = [
+      ["x5y1", "x4y2", "x3y3", "x2y4", "x1y5"],
+      ["x1y1", "x2y2", "x3y3", "x4y4", "x5y5"],
+    ];
+    const diagonal: string[][] = [[]].concat(
+      diagonal_level2,
+      diagonal_level3,
+      diagonal_level4,
+      diagonal_level5
+    );
+    const sameDiagonal = diagonal.every((vals) =>
+      vals.every((val) => oPositions.includes(val))
+    );
+
+    console.log(" -> sameDiagonal:", sameDiagonal);
+    if (sameDiagonal) return true;
+
+    return false;
   }
 
   createTunnel(room: string) {
@@ -434,7 +504,7 @@ export class Game {
 
     const distant: number = user1_x - user2_x + (user1_y - user2_y);
     if (distant % 2) return true;
-    return;
+    return false;
   }
 
   deleteUser(userId: string) {
