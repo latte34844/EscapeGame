@@ -18,22 +18,22 @@ var Game = /** @class */ (function () {
     Game.prototype.join = function (userName, id, room) {
         if (!this.rooms[room]) {
             this.rooms[room] = {};
-            console.log('create new room');
+            console.log("create new room");
         }
         var role = this.createRole(room);
-        if (role === 'spectator') {
+        if (role === "spectator") {
             if (!this.rooms[room].spectators) {
                 this.rooms[room].spectators = [];
             }
             this.rooms[room].spectators.push({
-                userId: id
+                userId: id,
             });
         }
         else {
             this.rooms[room][role] = {
-                userId: id
+                userId: id,
             };
-            if (role === 'prisoner')
+            if (role === "prisoner")
                 this.rooms[room].player1 = id;
             else
                 this.rooms[room].player2 = id;
@@ -43,51 +43,110 @@ var Game = /** @class */ (function () {
             userId: id,
             userRole: role,
             userRoom: room,
-            userPosition: 'x6y6'
+            userPosition: "x6y6",
         });
-        console.log('create user');
+        console.log("create user");
         return role;
     };
     Game.prototype.createRole = function (room) {
-        var role = '';
+        var role = "";
         var random = Math.floor(Math.random() * 2);
         if (random === 0) {
-            role = 'prisoner';
+            role = "prisoner";
         }
         else {
-            role = 'warden';
+            role = "warden";
         }
         if (!this.rooms[room][role]) {
             return role;
         }
-        else if (role === 'prisoner' && !this.rooms[room]['warden']) {
-            return 'warden';
+        else if (role === "prisoner" && !this.rooms[room]["warden"]) {
+            return "warden";
         }
-        else if (role === 'warden' && !this.rooms[room]['prisoner']) {
-            return 'prisoner';
+        else if (role === "warden" && !this.rooms[room]["prisoner"]) {
+            return "prisoner";
         }
-        return 'spectator';
+        return "spectator";
     };
     Game.prototype.isRoomFull = function (room) {
-        return this.rooms[room]['warden'] && this.rooms[room]['prisoner'];
+        return this.rooms[room]["warden"] && this.rooms[room]["prisoner"];
     };
     Game.prototype.createRoomObstacle = function (room) {
         var oPositions = [];
-        var _loop_1 = function () {
-            var x = Math.floor(Math.random() * 5) + 1;
-            var y = Math.floor(Math.random() * 5) + 1;
-            var oPosition = "x" + x.toString() + "y" + y.toString();
-            if (!oPositions.find(function (o) { return o === oPosition; })) {
-                oPositions.push(oPosition);
+        var checker = true;
+        var attempt = 1;
+        while (checker) {
+            console.log("create obstacle attempt", attempt);
+            oPositions = [];
+            var _loop_1 = function () {
+                var x = Math.floor(Math.random() * 5) + 1;
+                var y = Math.floor(Math.random() * 5) + 1;
+                var oPosition = "x" + x.toString() + "y" + y.toString();
+                if (!oPositions.find(function (o) { return o === oPosition; })) {
+                    oPositions.push(oPosition);
+                }
+            };
+            while (oPositions.length < 5) {
+                _loop_1();
             }
-        };
-        while (oPositions.length < 5) {
-            _loop_1();
+            console.log("obstacles ", oPositions);
+            this.rooms[room].obstacle = oPositions;
+            this.rooms[room].notFree = __spreadArray([], oPositions, true);
+            console.log("check Invalid");
+            checker = this.checkInvalidObstacle(room);
+            console.log(" -> checker:", checker);
+            attempt++;
         }
-        console.log('obstacles ', oPositions);
-        this.rooms[room].obstacle = oPositions;
-        this.rooms[room].notFree = __spreadArray([], oPositions, true);
         return oPositions;
+    };
+    Game.prototype.checkInvalidObstacle = function (room) {
+        //check if all obstacles are in same row or colums
+        var oPositions = this.rooms[room].obstacle;
+        var rows = [];
+        var columns = [];
+        for (var i = 0; i < 5; i++) {
+            rows.push(oPositions[i].charAt(1));
+            columns.push(oPositions[i].charAt(3));
+        }
+        var sameRows = rows.every(function (v) { return v === rows[0]; });
+        var sameColumns = columns.every(function (v) { return v === columns[0]; });
+        console.log(" -> sameRows: ", sameRows);
+        console.log(" -> sameColums: ", sameColumns);
+        if (sameRows)
+            return true;
+        if (sameColumns)
+            return true;
+        //check if all obstcles are in same diagonal
+        var diagonal_level2 = [
+            ["x2y1", "x1y2"],
+            ["x5y4", "x4y5"],
+            ["x4y1", "x5y2"],
+            ["x1y4", "x2y5"],
+        ];
+        var diagonal_level3 = [
+            ["x3y1", "x2y2", "x1y3"],
+            ["x5y3", "x4y4", "x3y5"],
+            ["x3y1", "x4y2", "x5y3"],
+            ["x1y3", "x2y4", "x3y5"],
+        ];
+        var diagonal_level4 = [
+            ["x4y1", "x3y2", "x2y3", "x1y1"],
+            ["x3y2", "x4y3", "x3y4", "x2y5"],
+            ["x2y1", "x3y2", "x4y3", "x5y4"],
+            ["x1y2", "x2y3", "x3y4", "x4y5"],
+        ];
+        var diagonal_level5 = [
+            ["x5y1", "x4y2", "x3y3", "x2y4", "x1y5"],
+            ["x1y1", "x2y2", "x3y3", "x4y4", "x5y5"],
+        ];
+        var diagonal = [[]].concat(diagonal_level2, diagonal_level3, diagonal_level4, diagonal_level5);
+        var sameDiagonal = diagonal.every(function (vals) {
+            return vals.every(function (val) { return oPositions.includes(val); });
+        });
+        console.log(" -> sameDiagonal:", sameDiagonal);
+        if (sameDiagonal)
+            return true;
+        return false;
     };
     Game.prototype.createTunnel = function (room) {
         var _loop_2 = function () {
@@ -95,7 +154,7 @@ var Game = /** @class */ (function () {
             var y = Math.floor(Math.random() * 5) + 1;
             var tPosition = "x" + x.toString() + "y" + y.toString();
             if (!this_1.rooms[room].notFree.find(function (nf) { return nf === tPosition; })) {
-                console.log('tunnel ', tPosition);
+                console.log("tunnel ", tPosition);
                 this_1.rooms[room].tunnel = tPosition;
                 this_1.rooms[room].notFree.push(tPosition);
                 return { value: tPosition };
@@ -129,16 +188,16 @@ var Game = /** @class */ (function () {
     Game.prototype.fetchUser = function (id) {
         var user = this.users.find(function (u) { return u.userId === id; });
         if (user === undefined) {
-            throw new TypeError('Error On Fetcing User');
+            throw new TypeError("Error On Fetcing User");
         }
         return user;
     };
     Game.prototype.movePosition = function (user, controller) {
         var position = user.userPosition;
-        var x = +position.split('')[1];
-        var y = +position.split('')[3];
+        var x = +position.split("")[1];
+        var y = +position.split("")[3];
         console.log("Present positon, x: " + x + ", y: " + y + " will move " + controller);
-        var pastPosition = 'x' + x.toString() + 'y' + y.toString();
+        var pastPosition = "x" + x.toString() + "y" + y.toString();
         switch (controller) {
             case "up":
                 if (this.checkMove(user, controller)) {
@@ -161,8 +220,8 @@ var Game = /** @class */ (function () {
                 }
                 break;
         }
-        var presentPosition = 'x' + x.toString() + 'y' + y.toString();
-        if (this.isYourTurn && (presentPosition != pastPosition)) {
+        var presentPosition = "x" + x.toString() + "y" + y.toString();
+        if (this.isYourTurn && presentPosition != pastPosition) {
             this.rooms[user.userRoom].currentTurn++;
             console.log(this.rooms[user.userRoom].currentTurn);
         }
@@ -172,12 +231,13 @@ var Game = /** @class */ (function () {
         return position;
     };
     Game.prototype.isYourTurn = function (user) {
+        //game start at turn 1
         var room = user.userRoom;
         var thisRoom = this.rooms[room];
         var turn = thisRoom.currentTurn;
         var lastWinner = thisRoom.lastWinner;
-        if (user.userRole == 'prisoner') {
-            if (lastWinner == 'prisoner') {
+        if (user.userRole == "prisoner") {
+            if (lastWinner == "prisoner") {
                 if (turn % 2 == 1) {
                     return true;
                 }
@@ -194,8 +254,8 @@ var Game = /** @class */ (function () {
                 }
             }
         }
-        if (user.userRole == 'warden') {
-            if (lastWinner == 'warden') {
+        if (user.userRole == "warden") {
+            if (lastWinner == "warden") {
                 if (turn % 2 == 1) {
                     return true;
                 }
@@ -216,8 +276,8 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.getTurn = function (user1, user2) {
         if (this.isYourTurn(user1))
-            return user1.userName + ' turn';
-        return user2.userName + ' turn';
+            return user1.userName + " turn";
+        return user2.userName + " turn";
     };
     Game.prototype.isWarden = function (user) {
         return user.userRole === "warden";
@@ -231,8 +291,8 @@ var Game = /** @class */ (function () {
             return false;
         var position = user.userPosition;
         var room = user.userRoom;
-        var x = +position.split('')[1];
-        var y = +position.split('')[3];
+        var x = +position.split("")[1];
+        var y = +position.split("")[3];
         var pos;
         switch (direction) {
             case "up":
@@ -247,10 +307,11 @@ var Game = /** @class */ (function () {
             case "right":
                 pos = "x" + (x + 1) + "y" + y;
                 break;
-            default: pos = "";
+            default:
+                pos = "";
         }
-        var _x = +pos.split('')[1];
-        var _y = +pos.split('')[3];
+        var _x = +pos.split("")[1];
+        var _y = +pos.split("")[3];
         if (_x <= 0 || _x > 5 || _y <= 0 || _y > 5)
             return false;
         if (this.isWarden(user) && pos === this.rooms[room].tunnel)
@@ -263,10 +324,10 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.getAvailableDirection = function (user) {
         return {
-            right: this.checkMove(user, 'right'),
-            up: this.checkMove(user, 'up'),
-            down: this.checkMove(user, 'down'),
-            left: this.checkMove(user, 'left')
+            right: this.checkMove(user, "right"),
+            up: this.checkMove(user, "up"),
+            down: this.checkMove(user, "down"),
+            left: this.checkMove(user, "left"),
         };
     };
     Game.prototype.getWarden = function (room) {
@@ -289,7 +350,7 @@ var Game = /** @class */ (function () {
             player1: this.getPlayer1Name(room),
             player2: this.getPlayer2Name(room),
             player1Score: player1Score,
-            player2Score: player2Score
+            player2Score: player2Score,
         };
     };
     Game.prototype.setLastWinner = function (room, input) {
@@ -341,15 +402,6 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.delay = function (ms) {
         return new Promise(function (resolve) { return setTimeout(resolve, ms); });
-    };
-    Game.prototype.checkDistant = function (user1, user2) {
-        //if distant between warden and prisoner is less than 1 rerandom map
-        var user1Position = user1.userPosition;
-        var user2Position = user2.userPosition;
-        var user1_x = +user1Position.split('')[1];
-        var user1_y = +user1Position.split('')[3];
-        var user2_x = +user2Position.split('')[1];
-        var user2_y = +user2Position.split('')[3];
     };
     return Game;
 }());
