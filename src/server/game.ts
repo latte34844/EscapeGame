@@ -174,6 +174,7 @@ export class Game {
       }
     }
   }
+
   createHiddenTreasure(room: string) {
     this.rooms[room].foundHiddenTreasure = false;
     while (true) {
