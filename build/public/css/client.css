@@ -285,7 +285,7 @@ body{
 .chat {
   margin-left: -20px;
   font-style: normal;
-  color: #0000ff;
+  color: rgb(238,68,77);
 }
 
 .mchat {
@@ -293,11 +293,9 @@ body{
   font-style: normal;
 }
 
-
-
 #messages {
   overflow: hidden;
-  height: 236px;
+  height: 100%;
 }
 
 audio::-webkit-media-controls-timeline {
@@ -316,4 +314,5 @@ audio::-webkit-media-controls-time-remaining-display {
 .achat {
   margin-left: -20px;
   font-style: normal;
+  color: rgb(139,236,108);
 }

@@ -1,6 +1,9 @@
 const socket = io();
 const params = new URLSearchParams(window.location.search)
 
+var aud = document.getElementById("audio")
+aud.volume = 0.8
+
 $(document).ready(function() {
     $('#cross').hide();		
     $("#navbar").animate({ "top": "0" }, 2000);
@@ -98,7 +101,7 @@ function hide(id) {
 function sendActivity(message) {
     var item = document.createElement('li')
     item.className="mchat"
-    item.style.color="red"
+    item.style.color="rgb(139,236,108)"
     item.textContent = message
     document.getElementById('messages').appendChild(item)
     scrollChatWindow()
@@ -142,7 +145,7 @@ const scrollChatWindow = () => {
     }, 500);
     setTimeout(() => {
         let messagesLength = $('#messages li');
-        if (messagesLength.length > 10) {
+        if (messagesLength.length > 27) {
             messagesLength.eq(0).remove();
         }
     }, 500);
