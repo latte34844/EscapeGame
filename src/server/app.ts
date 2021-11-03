@@ -281,7 +281,6 @@ io.on('connection', (socket: socketIO.Socket) => {
     })       
     socket.on('message', (message: Message)=> {
         let user = game.fetchUser(message.from)
-        console.log('message',message.message, user.userName+'end')
         socket.to(user.userRoom).emit('chat', <Message>{
             message: message.message,
             from: user.userName

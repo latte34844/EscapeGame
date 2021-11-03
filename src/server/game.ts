@@ -420,9 +420,9 @@ export class Game {
             if(user.userRole != 'spectator'){
                 this.rooms[user.userRoom][user.userRole] = ''
             }else{
-                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(user => user.userId != userId) 
+                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(usr => usr.userId != userId) 
             }
-            this.users = this.users.filter(user => user.userId != userId)
+            this.users = this.users.filter(usr => usr.userId != userId)
         }
         
     }
