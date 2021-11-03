@@ -1,49 +1,111 @@
-/* Add a black background color to the top navigation */
-.topnav {
-  background-color: #333;
-  overflow: hidden;
-}
-.topnav h1 {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-  background-color: #04aa6d;
-  margin: 0;
-}
-/* Style the links inside the navigation bar */
-.topnav a {
-  float: left;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
+@import url('http://fonts.cdnfonts.com/css/hall-fetica-wide');
+@import url('http://fonts.cdnfonts.com/css/games');
+@import url('https://fonts.googleapis.com/css?family=Raleway:100,200,400,600,700,900');
 
-/* Change the color of links on hover */
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
+*{
+  color:white;
+  font-family: 'Hall Fetica Wide', sans-serif;
 }
-
-/* Add a color to the active/current link */
-.topnav a.active {
-  background-color: #04aa6d;
-  color: white;
+body{
+  background-color:black !important;
+  background:
+  linear-gradient(whitesmoke,black) calc(0.5*100%/10),
+  linear-gradient(whitesmoke,black) calc(1.5*100%/10),
+  linear-gradient(whitesmoke,black) calc(2.5*100%/10),
+  linear-gradient(whitesmoke,black) calc(7.5*100%/10),
+  linear-gradient(whitesmoke,black) calc(8.5*100%/10),
+  linear-gradient(whitesmoke,black) calc(9.5*100%/10);
+  background-size:20px 70%;
+  background-position-y: 0;
+  background-repeat:no-repeat;
 }
-
+#navbar{
+  width:100%;
+  z-index:10;
+  position:fixed;
+  top:-200px;
+  height:70px;
+  background-color:#b16101;
+}
+#navbar-elements{
+  position:relative;
+  top:6px;
+}
+#title{
+  margin-left:20px;
+  font-size:40px;
+  position:relative;
+  top:7px;
+  font-family: 'Games', sans-serif;
+}
+#audio{
+  width:185px;
+  height:30px;
+  vertical-align: middle;
+  position:relative;
+  left:50px;
+}
+#music{
+  position:relative;
+  left:70px;
+}
+#music button{
+  border:none;
+  background: none;
+  border-bottom:none;
+  border-radius:0;
+  font-size:17px;
+  padding-bottom:18px;
+}
+#music button:hover {
+  border-bottom:solid black 6px;
+}
+#leave-form{
+  display:inline-block;
+  position:relative;
+  left:190px;
+}
+#leave{
+  width:200px;
+  padding-top:4px;
+  background-color:black;
+  font-size:19px;
+  font-family: 'Games', sans-serif;
+  border-radius:20px;
+  border:solid black 4px;
+  transition: background-color 0.6s ease;
+}
+#leave:hover {
+  color:black;
+  background-color:rgba(255,0,0,0.5);
+}
+#cross{
+  position:relative;
+  left: 300px;
+  width:40px;
+}
+#menu{
+  position:relative;
+  left:300px;
+  margin-right:20px;
+  width:40px;
+}
+#content{
+  position:relative;
+  top:80px;
+}
 .box {
   background-color: black;
-  border: 5px solid grey;
+  border: 5px solid #b16101;
   height: 100px;
   padding: 0;
 }
 .container {
   width: 500px;
+  border: 5px solid #b16101;
   text-align: center;
+  position:relative;
+  top:5px;
 }
 
 .prisonerImg {
@@ -67,28 +129,36 @@
 }
 
 .btnImg {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }
 
-button {
-  background: none;
+.control:hover {
+  background-color: rgba(255,0,0,0.5);
+  width:200px;
 }
-button:hover {
-  background-color: red;
-  border-radius: 60px;
+#button-wrap{
+  position:fixed;
+  bottom:0px;
+  left:4%;
 }
-
 #button {
   text-align: center;
   border-width: 0;
+  background-color:none;
 }
-
+.control{
+  transition: background-color 0.6s ease;
+  width:150px;
+  background-color:gray; 
+  height:150px;
+  border-radius: 60px;
+}
 #up {
   border-width: 0;
   padding: 0;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   transform: rotate(90deg);
   visibility: visible;
 }
@@ -96,24 +166,24 @@ button:hover {
 #down {
   border-width: 0;
   padding: 0;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   transform: rotate(90deg);
   visibility: visible;
 }
 #left {
   border-width: 0;
   padding: 0;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   visibility: visible;
 }
 
 #right {
   border-width: 0;
   padding: 0;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   visibility: visible;
 }
 
@@ -123,49 +193,58 @@ button:hover {
 
 .scoreboard {
   text-align: center;
+  width:350px;
+  margin:0 auto;
+  padding-bottom:5px;
+  font-size:30px;
+  border-bottom:solid #b16101 4px;
 }
-
 #scoreboard {
   text-align: center;
+  font-size:22px;
+  position:relative;
+  top:5px;
 }
-
+#timer {
+  color:red;
+  text-align: center;
+  font-size:30px;
+}
 #turn {
+  font-size: 20px;
   text-align: center;
 }
 
 #role {
-  font-size: 1 rem;
+  font-size: 20px;
   text-align: center;
 }
 
 
-#timer {
-  text-align: center;
-}
 
 #form {
-  background: rgba(0,0,0,0.15);
-  padding: 0.25rem; 
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  height: 3rem;
+  background:#b16101;
+  padding: 20px;
+  position:fixed;
+  bottom:0;
+  height: 100px;
   box-sizing: border-box;
   backdrop-filter: blue(10px);
 }
-
+.input-group{
+  position:relative;
+  bottom:15px;
+}
 #input {
   border: none;
-  padding: 0 1rem;
+  width:100%;
+  padding-left:8px;
   flex-grow: 1;
-  border-radius: 2rem;
+  color:black;
+  font-size:20px;
   margin: 0.25rem;
 }
 
-#input.focus {
-  outline: none;
-}
 
 #form > button {
   background: #333;
@@ -178,22 +257,31 @@ button:hover {
 }
 
 .chatPanel {
-  height: 300px;
-  width: 30%;
-  /* margin-right: 1000px; */
-  border: solid 1px gray;
+  opacity:0;
+  display:block;
+  height: 100%;
+  width: 400px;
   margin-top: -339px;
   margin-left: 20px;
-  border-radius: 20px 0px 4px 4px;
-  background: #fff;
-  /* background: linear-gradient(
-      56deg,
-      rgba(34, 193, 195, 0.49193275943189773) 0%,
-      rgba(253, 187, 45, 0.494733879880077) 100%
-  ); */
-  position: relative;
+  background: black;
+  position:fixed;
+  top:403px;
+  right:0;
+  border:solid #b16101 5px;
 }
-
+#send{
+  margin:2px auto;
+  border:solid black 3px;
+  font-size:15;
+  border-radius:20px;
+  width:70%;
+  background:black;
+  transition: background-color 0.6s ease;
+}
+#send:hover {
+  color:black;
+  background-color:#b16101;
+}
 .chat {
   margin-left: -20px;
   font-style: normal;

@@ -219,8 +219,8 @@ export class Game {
     }
 
     getTurn(user1: User, user2: User){
-        if (this.isYourTurn(user1)) return user1.userName + ' turn';
-        return user2.userName + ' turn';
+        if (this.isYourTurn(user1)) return user1.userName + '\'s turn';
+        return user2.userName + '\'s turn';
     }
     
     isWarden(user: User){
