@@ -153,6 +153,8 @@ socket.on('clear', room => {
 
 socket.on('yourTurn', (direction, role)=>{
     console.log('your turn')
+    const enterTURN = new Audio("musics/enterturn.mp3")
+    enterTURN.play()
     var counter = 11;
     let pastXY,curXY;
     if(role == 'prisoner'){
@@ -203,6 +205,8 @@ const setPposition = (position) =>{
     if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('ppresentXY');
+        const footStep = new Audio("musics/footstep.mp3")
+        footStep.play()
     }
     const xy = document.querySelector("." + position);
     xy.classList.add('ppresentXY')
@@ -216,11 +220,16 @@ const setWposition = (position) =>{
     if(pastXY !== null){
         pastXY.innerHTML= '';
         pastXY.classList.remove('wpresentXY');
+        const footStep = new Audio("musics/footstep.mp3")
+        footStep.play()
     }
     const xy = document.querySelector("." + position);
     xy.classList.add('wpresentXY')
     xy.innerHTML='<img class="wardenImg" src="images/warden.png">';
     console.log('warden position ', xy);
+    setTimeout(function() {
+        console.log('delay')
+    }, 1000);
 }
 
 const setOpositions = (positions) =>{
