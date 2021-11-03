@@ -1,8 +1,24 @@
 const socket = io();
 const params = new URLSearchParams(window.location.search)
 
-var aud = document.getElementById("audio")
-aud.volume = 0.8
+const aud = document.getElementById("audio")
+aud.volume = 0.2
+
+document.addEventListener('click', initAudio)
+document.addEventListener('keypress', e => initAudio2(e))
+
+function initAudio(){
+    aud.play()
+    document.removeEventListener('click', initAudio)
+}
+
+function initAudio2(e){
+    if (e.key === 'Enter'){
+        playChatAudio()
+        document.addEventListener('keypress', e => initAudio2(e))
+    }
+}
+
 
 $(document).ready(function() {
     $('#cross').hide();		
@@ -139,14 +155,21 @@ function addChat(message, mychat) {
     scrollChatWindow()
 }
 
+const playChatAudio = () => {
+    const chatAudio = new Audio("./musics/POP1.WAV")
+    chatAudio.play()
+    chatAudio.currentTime=0
+}
+
 const scrollChatWindow = () => {
+    playChatAudio()
     $('#messages').animate({
         scrollTop: $('#messages li:last-child').position().top,
     }, 500);
     setTimeout(() => {
         let messagesLength = $('#messages li');
         if (messagesLength.length > 27) {
-            messagesLength.eq(0).remove();
+            messagesLength.eq(1).remove();
         }
     }, 500);
 };

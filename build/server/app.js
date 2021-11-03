@@ -278,7 +278,6 @@ io.on('connection', function (socket) {
     });
     socket.on('message', function (message) {
         var user = game.fetchUser(message.from);
-        console.log('message', message.message, user.userName + 'end');
         socket.to(user.userRoom).emit('chat', {
             message: message.message,
             from: user.userName

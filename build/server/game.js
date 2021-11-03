@@ -420,9 +420,9 @@ var Game = /** @class */ (function () {
                 this.rooms[user.userRoom][user.userRole] = '';
             }
             else {
-                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(function (user) { return user.userId != userId; });
+                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(function (usr) { return usr.userId != userId; });
             }
-            this.users = this.users.filter(function (user) { return user.userId != userId; });
+            this.users = this.users.filter(function (usr) { return usr.userId != userId; });
         }
     };
     return Game;
