@@ -134,6 +134,11 @@ io.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
         console.log('disconnect: ', socket.id);
+        var user = game.fetchUser(socket.id);
+        io.to(user.userRoom).emit('dc', {
+            from: user.userName,
+            message: "disconnected"
+        });
         game.deleteUser(socket.id);
         io.emit('population', game.users);
     });
