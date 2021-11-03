@@ -5,107 +5,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escape Game</title>
+    <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="css/client.css">
 </head>
 
 <body>
-    <nav class ="navbar navbar-light bg-light">
-        <span class="navbar-brand mb-0 h1">Escape plan!!!</span>
-        
-        <audio id="audio" controls autoplay>
-            <source id="musicsource" src="./musics/music1.mp3" type="audio/mpeg">
-        </audio>
-        <span>
-            <button id="music1" onclick="music(1)" disabled="true">music1</button>
-            <button id="music2" onclick="music(2)">music2</button>
-            <button id="music3" onclick="music(3)">music3</button>
-        </span>
-        <form action="/leave" method="POST">
-            <button type="submit">Leave Room</button>
-        </form>
+    <nav id='navbar'>
+        <div id='navbar-elements'>
+            <span id='title' class="navbar-brand mb-0 h1">Escape Plan</span>
+            <audio id="audio" controls autoplay>
+                <source id="musicsource" src="./musics/music1.mp3" type="audio/mpeg">
+            </audio>
+            <span id='music'>
+                <button id="music1" onclick="music(1)" disabled="true">Music 1</button>
+                <button id="music2" onclick="music(2)">Music 2</button>
+                <button id="music3" onclick="music(3)">Music 3</button>
+            </span>
+            <form id='leave-form' action="/leave" method="POST">
+                <button id='leave' type="submit">Leave Room</button>
+            </form>
+            <img id='cross' src='images/cross.png'/>
+            <img id='menu' src='images/menu.png'/>
+        </div>
     </nav>
     
-    <div>
-        <h1 class="scoreboard">scoreboard</h1>
-        <h1 id="timer">Timer</h1>
-        <h1 id="scoreboard">Hello</h1>
-    </div>
-    <div id="turn">Turn</div>
-    <div id="role">role</div>
-    <div class="container">
-        <div class="row">
-            <div class="col box x1y5">
+    <div id='content'>
+        <div id='h1'>
+            <h1 class="scoreboard">Scoreboard</h1>
+            <h1 id="scoreboard">Hello</h1>
+            <h1 id="timer">Timer</h1>
+        </div>
+        <div id="turn">Turn</div>
+        <div id="role">role</div>
+        <div class="container">
+            <div class="row">
+                <div class="col box x1y5">
+                </div>
+                <div class="col box x2y5">
+                </div>
+                <div class="col box x3y5">
+                </div>
+                <div class="col box x4y5">
+                </div>
+                <div class="col box x5y5">
+                </div>
             </div>
-            <div class="col box x2y5">
+            <div class="row">
+                <div class="col box x1y4">
+                </div>
+                <div class="col box x2y4">
+                </div>
+                <div class="col box x3y4">
+                </div>
+                <div class="col box x4y4">
+                </div>
+                <div class="col box x5y4">
+                </div>
             </div>
-            <div class="col box x3y5">
+            <div class="row">
+                <div class="col box x1y3">
+                </div>
+                <div class="col box x2y3">
+                </div>
+                <div class="col box x3y3">
+                </div>
+                <div class="col box x4y3">
+                </div>
+                <div class="col box x5y3">
+                </div>
             </div>
-            <div class="col box x4y5">
+            <div class="row">
+                <div class="col box x1y2">
+                </div>
+                <div class="col box x2y2">
+                </div>
+                <div class="col box x3y2">
+                </div>
+                <div class="col box x4y2">
+                </div>
+                <div class="col box x5y2">
+                </div>
             </div>
-            <div class="col box x5y5">
+            <div class="row">
+                <div class="col box x1y1">
+                </div>
+                <div class="col box x2y1">
+                </div>
+                <div class="col box x3y1">
+                </div>
+                <div class="col box x4y1">
+                </div>
+                <div class="col box x5y1">
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col box x1y4">
-            </div>
-            <div class="col box x2y4">
-            </div>
-            <div class="col box x3y4">
-            </div>
-            <div class="col box x4y4">
-            </div>
-            <div class="col box x5y4">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col box x1y3">
-            </div>
-            <div class="col box x2y3">
-            </div>
-            <div class="col box x3y3">
-            </div>
-            <div class="col box x4y3">
-            </div>
-            <div class="col box x5y3">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col box x1y2">
-            </div>
-            <div class="col box x2y2">
-            </div>
-            <div class="col box x3y2">
-            </div>
-            <div class="col box x4y2">
-            </div>
-            <div class="col box x5y2">
-            </div>
-        </div>
-        <div class="row">
-            <div class="col box x1y1">
-            </div>
-            <div class="col box x2y1">
-            </div>
-            <div class="col box x3y1">
-            </div>
-            <div class="col box x4y1">
-            </div>
-            <div class="col box x5y1">
-            </div>
-        </div>
-    </div>
-    <div id="button">
-        <div>
-            <button class="control" id="up"><img class="btnImg" src="./images/arrow-left.png" alt="up"></button>
-        </div> 
-        <div> 
-            <button class="control" id="left"><img class="btnImg" src="./images/arrow-left.png" alt="left"></button>
-            <button class="control" id="down"><img class="btnImg" src="./images/arrow-right.png" alt="down"></button>
-            <button class="control" id="right"><img class="btnImg" src="./images/arrow-right.png" alt="right"></button>
-        </div>
-    </div>
-    <div> 
         <div class="chatPanel">
             <ol style="list-style-type:none" id='messages'></ol>
             <div id="form">
@@ -115,6 +109,19 @@
                 </div>
             </div>
         </div>
+        <div id='button-wrap'>
+            <div id="button">
+                <div>
+                    <button class="control" id="up"><img class="btnImg" src="./images/arrow-left.png" alt="up"></button>
+                </div> 
+                <div> 
+                    <button class="control" id="left"><img class="btnImg" src="./images/arrow-left.png" alt="left"></button>
+                    <button class="control" id="down"><img class="btnImg" src="./images/arrow-right.png" alt="down"></button>
+                    <button class="control" id="right"><img class="btnImg" src="./images/arrow-right.png" alt="right"></button>
+                </div>
+            </div>
+        </div>
+        
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>

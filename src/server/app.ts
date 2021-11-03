@@ -51,6 +51,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             let wPosition = warden.userPosition //x6y6
             let oPositions:string[] = []
             let tPosition = ''
+            let hPosition = ''
             game.setScore(room, 0,0)
             game.setLastWinner(room,'warden')
             game.setTurn(room, 1)
@@ -63,6 +64,7 @@ io.on('connection', (socket: socketIO.Socket) => {
 
                 oPositions = game.createRoomObstacle(room)
                 tPosition = game.createTunnel(room)
+                hPosition = game.createHiddenTreasure(room)
                 while(true){
                     pPosition = game.createUserPosition(prisoner); //x y
                     wPosition = game.createUserPosition(warden); //x y
@@ -77,6 +79,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(room).emit('wPosition',wPosition);
                 io.to(room).emit('tPosition',tPosition);
                 io.to(room).emit('oPositions',oPositions);
+                io.to(room).emit('hPosition', hPosition)
 
                 io.to(prisoner.userId).emit('role', prisoner.userRole)
                 io.to(warden.userId).emit('role', warden.userRole)
@@ -91,6 +94,7 @@ io.on('connection', (socket: socketIO.Socket) => {
             }else{
                 oPositions = game.rooms[room].obstacle
                 tPosition = game.rooms[room].tunnel
+                hPosition = game.rooms[room].hiddenTreasure
                 const user = game.fetchUser(socket.id)
 
                 io.to(user.userId).emit('direction', game.getAvailableDirection(user))
@@ -99,6 +103,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(user.userId).emit('wPosition',wPosition);
                 io.to(user.userId).emit('tPosition',tPosition);
                 io.to(user.userId).emit('oPositions',oPositions);
+                io.to(user.userId).emit('hPosition', hPosition)
                 io.to(user.userId).emit('role', user.userRole)
                 io.to(user.userId).emit('turn', game.getTurn(prisoner,warden))
                 
@@ -114,7 +119,6 @@ io.on('connection', (socket: socketIO.Socket) => {
     socket.on('disconnect', () => {
         console.log('disconnect: ', socket.id)
         game.deleteUser(socket.id)
-        console.log(game.users)
         io.emit('population' ,game.users)
     })
 
@@ -125,7 +129,6 @@ io.on('connection', (socket: socketIO.Socket) => {
         const user = game.fetchUser(socket.id)
 
         if(!game.checkMove(user,controller)) {
-            // console.log('cant move');
             return;
         }
         const position = game.movePosition(user,controller)
@@ -169,7 +172,11 @@ io.on('connection', (socket: socketIO.Socket) => {
         if(user.userRole == 'warden'){
             io.to(prisoner.userId).emit('yourTurn',game.getAvailableDirection(prisoner), 'prisoner');
         }
-
+        if(game.checkHiddenTreasure(user)){
+            game.foundTreasure(user);
+            io.to(room).emit('foundTreasure', `${user.userName} found the treasure`);
+            io.to(room).emit('score', game.getScore(room))
+        }
         if (checkWin) {
 
             (async () => { 
@@ -182,13 +189,12 @@ io.on('connection', (socket: socketIO.Socket) => {
                 console.log("win: "+user.userName)
                 game.win(user)
 
-                io.to(room).emit('win', `${user.userName} wins the game as ${user.userRole}`)
+                io.to(room).emit('win', `${user.userName} wins the game`)
                 // io.to(room).emit('clear', "clear object")
-                let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
+                let {oPositions,tPosition, pPosition, wPosition, hPosition} = game.restartGame(room)
 
                 prisoner = game.getPrisoner(room)
                 warden = game.getWarden(room)
-                let spectators = game.getSpectator(room)
 
                 io.to(room).emit('score', game.getScore(room))
                 io.to(room).emit('clear', game.rooms[room])
@@ -197,6 +203,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(room).emit('tPosition',tPosition);
                 io.to(room).emit('pPosition',pPosition);
                 io.to(room).emit('wPosition',wPosition);
+                io.to(room).emit('hPosition', hPosition)
 
                 io.to(prisoner.userId).emit('role', prisoner.userRole)
                 io.to(warden.userId).emit('role', warden.userRole)
@@ -207,7 +214,7 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(prisoner.userId).emit('turn', game.getTurn(prisoner,warden))
                 io.to(warden.userId).emit('turn', game.getTurn(prisoner,warden))
 
-                io.to(warden.userId).emit('yourTurn', game.getAvailableDirection(warden), 'warden')
+                io.to(user.userId).emit('yourTurn', game.getAvailableDirection(user), user.userRole)
 
                 await game.delay(50)
 
@@ -223,7 +230,6 @@ io.on('connection', (socket: socketIO.Socket) => {
     })
     socket.on('reset', () =>{
         const user = game.fetchUser(socket.id)
-        //console.log(game.rooms[user.userRoom])
         io.to(user.userRoom).emit('clear',game.rooms[user.userRoom])
     })
 
@@ -240,7 +246,7 @@ io.on('connection', (socket: socketIO.Socket) => {
 
         game.resetRole(room)
         game.setScore(room,0,0)
-        let {oPositions,tPosition, pPosition, wPosition} = game.restartGame(room)
+        let {oPositions,tPosition, pPosition, wPosition, hPosition} = game.restartGame(room)
 
                 let prisoner = game.getPrisoner(room)
                 let warden = game.getWarden(room)
@@ -253,6 +259,8 @@ io.on('connection', (socket: socketIO.Socket) => {
                 io.to(room).emit('tPosition',tPosition);
                 io.to(room).emit('pPosition',pPosition);
                 io.to(room).emit('wPosition',wPosition);
+                io.to(room).emit('hPosition',hPosition);
+
 
                 io.to(prisoner.userId).emit('role', prisoner.userRole)
                 io.to(warden.userId).emit('role', warden.userRole)
@@ -273,7 +281,6 @@ io.on('connection', (socket: socketIO.Socket) => {
     })       
     socket.on('message', (message: Message)=> {
         let user = game.fetchUser(message.from)
-        console.log('message',message.message, user.userName+'end')
         socket.to(user.userRoom).emit('chat', <Message>{
             message: message.message,
             from: user.userName

@@ -15,7 +15,6 @@ export class Game {
 
         if(!this.rooms[room]){
             this.rooms[room]= {}
-            // console.log('create new room')
         }        
 
         const role = this.createRole(room)
@@ -43,7 +42,6 @@ export class Game {
             userRoom: room, 
             userPosition: 'x6y6'
         })
-        // console.log('create user')
         return role
         
     }
@@ -85,18 +83,10 @@ export class Game {
                 oPositions.push(oPosition)
             }
         }
-        // console.log('obstacles ',oPositions)
         this.rooms[room].obstacle = oPositions
         this.rooms[room].notFree = [...oPositions]
         return oPositions
     }
-
-    // checkInvalidObstacle(room:string){
-    //     //diagonal patterns
-    //     const diagonal_2o:string[][] = [["x2y1", "x1y2"], ["x5x4", "x4x5"]]
-
-        
-    // }
 
     createTunnel(room:string){
         while(true){
@@ -105,7 +95,6 @@ export class Game {
             const tPosition = "x" + x.toString() + "y" + y.toString()
 
             if(!this.rooms[room].notFree.find((nf:string) => nf === tPosition)){
-                // console.log('tunnel ',tPosition)
                 this.rooms[room].tunnel= tPosition
                 this.rooms[room].notFree.push(tPosition)
                 return tPosition
@@ -113,6 +102,23 @@ export class Game {
         }
         
     }
+    createHiddenTreasure(room:string){
+        this.rooms[room].foundHiddenTreasure = false
+        while(true){
+            let x = Math.floor( Math.random() * 5 ) + 1
+            let y = Math.floor( Math.random() * 5 ) + 1
+            const hPosition = "x" + x.toString() + "y" + y.toString()
+
+            if(!this.rooms[room].notFree.find((nf:string) => nf === hPosition)){
+                this.rooms[room].hiddenTreasure = hPosition
+                this.rooms[room].notFree.push(hPosition)
+                return hPosition
+            }
+        }
+    }
+
+
+
     createUserPosition(user:User){
         while(true){
             let x = Math.floor( Math.random() * 5 ) + 1;
@@ -121,7 +127,6 @@ export class Game {
 
             if(!this.rooms[user.userRoom].notFree.find((nf:string) => nf === userPosition)){
                 user.userPosition = userPosition
-                // console.log(this.users)
                 return userPosition
             }
         }
@@ -139,7 +144,6 @@ export class Game {
         let position = user.userPosition
         let x = +position.split('')[1]
         let y = +position.split('')[3]
-        // console.log(`Present positon, x: ${x}, y: ${y} will move ${controller}`)
         let pastPosition = 'x' + x.toString() + 'y' + y.toString();
         switch (controller){
             case "up":
@@ -167,17 +171,15 @@ export class Game {
         let presentPosition = 'x' + x.toString() + 'y' + y.toString();
         if(this.isYourTurn && (presentPosition != pastPosition) ){
             this.rooms[user.userRoom].currentTurn++;
-            // console.log(this.rooms[user.userRoom].currentTurn);
         }
         position = "x" + x.toString() + "y" + y.toString()
         user.userPosition = position
-        // console.log(position)
         
         return position
     }
     
 
-    isYourTurn(user: User):boolean{ //game start at turn 1
+    isYourTurn(user: User):boolean{ 
         let room = user.userRoom;
         let thisRoom = this.rooms[room];
         let turn = thisRoom.currentTurn;
@@ -217,8 +219,8 @@ export class Game {
     }
 
     getTurn(user1: User, user2: User){
-        if (this.isYourTurn(user1)) return user1.userName + ' turn';
-        return user2.userName + ' turn';
+        if (this.isYourTurn(user1)) return user1.userName + '\'s turn';
+        return user2.userName + '\'s turn';
     }
     
     isWarden(user: User){
@@ -318,6 +320,21 @@ export class Game {
         return user.userPosition === this.getPrisoner(user.userRoom).userPosition
     }
 
+    checkHiddenTreasure(user:User){
+        return ((user.userPosition === this.rooms[user.userRoom].hiddenTreasure) && !this.rooms[user.userRoom].hasFoundTreasure)
+    }
+
+    foundTreasure(user:User){
+        this.rooms[user.userRoom].hasFoundTreasure = true;
+        let room = user.userRoom
+        let currentScore = this.getScore(room)
+        if (user.userId == this.rooms[room].player1) {
+            this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
+        } else {
+            this.setScore(room, currentScore.player1Score, ++currentScore.player2Score)
+        }
+    }
+
     swapRole(room: string){
         let temp1 = this.getWarden(room)
         let temp2 = this.getPrisoner(room)
@@ -332,6 +349,7 @@ export class Game {
         let tPosition = this.createTunnel(room)
         let pPosition = prisoner.userPosition //x6y6
         let wPosition = warden.userPosition 
+        let hPosition = this.createHiddenTreasure(room)
             while(true){
                 pPosition = this.createUserPosition(prisoner); //x y
                 wPosition = this.createUserPosition(warden); //x y
@@ -339,13 +357,14 @@ export class Game {
                     break
                 }
             }
-        return {oPositions,tPosition, pPosition, wPosition}
+        return {oPositions,tPosition, pPosition, wPosition, hPosition}
     }
 
     win(user: User) {
         let room = user.userRoom
         let currentScore = this.getScore(room)
         this.rooms[room].currentTurn = 1;
+        this.rooms[user.userRoom].hasFoundTreasure = false;
         if (user.userId == this.rooms[room].player1) {
             this.setScore(room, ++currentScore.player1Score, currentScore.player2Score)
         } else {
@@ -401,9 +420,9 @@ export class Game {
             if(user.userRole != 'spectator'){
                 this.rooms[user.userRoom][user.userRole] = ''
             }else{
-                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(user => user.userId != userId) 
+                this.rooms[user.userRoom].spectators = this.rooms[user.userRoom].spectators.filter(usr => usr.userId != userId) 
             }
-            this.users = this.users.filter(user => user.userId != userId)
+            this.users = this.users.filter(usr => usr.userId != userId)
         }
         
     }
