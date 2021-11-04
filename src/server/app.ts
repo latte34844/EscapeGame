@@ -191,8 +191,13 @@ io.on("connection", (socket: socketIO.Socket) => {
     }
     if (game.checkHiddenTreasure(user)) {
       game.foundTreasure(user);
-      io.to(room).emit("foundTreasure", `${user.userName} found the treasure`);
+      io.to(room).emit("foundTreasure", `${user.userName} found the treasure.`);
       io.to(room).emit("score", game.getScore(room));
+    }
+    if (game.checkSpecialTurn(room)) {
+      let tPosition = game.moveTunnel(room);
+      io.to(room).emit("sendMoveTunnelMsg", `Turn 20th the tunnel is moved.`);
+      io.to(room).emit("moveTunnel", tPosition);
     }
     if (checkWin) {
       (async () => {

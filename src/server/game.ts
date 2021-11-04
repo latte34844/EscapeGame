@@ -79,9 +79,9 @@ export class Game {
     var oPositions: string[] = [];
     var checker: boolean = true;
     var attempt: number = 1;
-    while (checker) {
-      console.log("create obstacle attempt", attempt);
+    while (true) {
       oPositions = [];
+
       while (oPositions.length < 5) {
         let x = Math.floor(Math.random() * 5) + 1;
         let y = Math.floor(Math.random() * 5) + 1;
@@ -91,14 +91,14 @@ export class Game {
           oPositions.push(oPosition);
         }
       }
-      console.log("obstacles ", oPositions);
       this.rooms[room].obstacle = oPositions;
-      this.rooms[room].notFree = [...oPositions];
-      console.log("check Invalid");
-      checker = this.checkInvalidObstacle(room);
-      console.log(" -> checker:", checker);
+      
+      if(!this.checkInvalidObstacle(room)){
+        break;
+      }
       attempt++;
     }
+    this.rooms[room].notFree = [...oPositions];
     return oPositions;
   }
 
@@ -116,8 +116,6 @@ export class Game {
     const sameRows: boolean = rows.every((v) => v === rows[0]);
     const sameColumns: boolean = columns.every((v) => v === columns[0]);
 
-    console.log(" -> sameRows: ", sameRows);
-    console.log(" -> sameColums: ", sameColumns);
 
     if (sameRows) return true;
     if (sameColumns) return true;
@@ -155,7 +153,6 @@ export class Game {
       vals.every((val) => oPositions.includes(val))
     );
 
-    console.log(" -> sameDiagonal:", sameDiagonal);
     if (sameDiagonal) return true;
 
     return false;
@@ -296,6 +293,37 @@ export class Game {
     return user2.userName + "'s turn";
   }
 
+  checkSpecialTurn(room: string) {
+    let currentTurn: number = this.rooms[room].currentTurn;
+    console.log("turn:", currentTurn);
+
+    if (currentTurn === 20) return true;
+    return false;
+  }
+
+  //move tunnel if proceed to turn 20th
+  moveTunnel(room: string) {
+    const oldTunnel: string = this.rooms[room].tunnel;
+    
+    while(true){
+      this.removeTunnel(oldTunnel, room)
+      this.createTunnel(room);
+      
+      if(oldTunnel !== this.rooms[room].tunnel){
+        break;
+      }
+    }
+    return this.rooms[room].tunnel;
+  }
+  removeTunnel(oldTunnel: string, room: string) {
+    this.rooms[room].tunnel = undefined;
+
+    let notFree: string[] = this.rooms[room].notFree;
+
+    const index: number = notFree.indexOf(oldTunnel, 0);
+    notFree.splice(index, 1);
+  }
+
   isWarden(user: User) {
     return user.userRole === "warden";
   }
@@ -386,7 +414,6 @@ export class Game {
     // assume user is prisoner
     return user.userPosition === this.rooms[user.userRoom].tunnel;
   }
-
   checkCatch(user: User) {
     // check that warden catch the prisoner or not
     // assume user is warden
