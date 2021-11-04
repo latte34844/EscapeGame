@@ -126,10 +126,8 @@ io.on("connection", function (socket) {
                 io.to(user.userId).emit("hPosition", hPosition);
                 io.to(user.userId).emit("role", user.userRole);
                 io.to(user.userId).emit("turn", game.getTurn(prisoner, warden));
-                console.log("send spectator");
             }
             io.to(warden.userId).emit("yourTurn", game.getAvailableDirection(warden), "warden");
-            console.log("send your turn");
         }
     });
     socket.on('disconnect', function () {
@@ -140,7 +138,7 @@ io.on("connection", function (socket) {
             message: "disconnected"
         });
         game.deleteUser(socket.id);
-        io.emit("population", game.users);
+        io.emit('population', game.users);
     });
     socket.on("movePosition", function (controller) {
         var user = game.fetchUser(socket.id);
@@ -253,7 +251,7 @@ io.on("connection", function (socket) {
                     case 0: return [4 /*yield*/, game.delay(50)];
                     case 1:
                         _b.sent();
-                        game.resetRole(room);
+                        // game.resetRole(room);
                         game.setScore(room, 0, 0);
                         _a = game.restartGame(room), oPositions = _a.oPositions, tPosition = _a.tPosition, pPosition = _a.pPosition, wPosition = _a.wPosition, hPosition = _a.hPosition;
                         prisoner = game.getPrisoner(room);
@@ -275,6 +273,15 @@ io.on("connection", function (socket) {
                         io.to(warden.userId).emit("direction", game.getAvailableDirection(warden));
                         io.to(prisoner.userId).emit("turn", game.getTurn(prisoner, warden));
                         io.to(warden.userId).emit("turn", game.getTurn(prisoner, warden));
+                        console.log(game.getTurn(prisoner, warden));
+                        if (game.isYourTurn(prisoner)) {
+                            io.to(prisoner.userId).emit("yourTurn", game.getAvailableDirection(prisoner), "prisoner");
+                        }
+                        else if (game.isYourTurn(warden)) {
+                            if (game.isYourTurn(warden)) {
+                                io.to(warden.userId).emit("yourTurn", game.getAvailableDirection(warden), "warden");
+                            }
+                        }
                         if (spectators) {
                             game.rooms[room].spectators.forEach(function (spectator) {
                                 var _spectator = game.fetchUser(spectator.userId);

@@ -292,7 +292,7 @@ var Game = /** @class */ (function () {
     };
     Game.prototype.checkSpecialTurn = function (room) {
         var currentTurn = this.rooms[room].currentTurn;
-        console.log("turn:", currentTurn);
+        // console.log("turn:", currentTurn);
         if (currentTurn === 20)
             return true;
         return false;
@@ -501,7 +501,7 @@ var Game = /** @class */ (function () {
     Game.prototype.deleteUser = function (userId) {
         var user = this.users.find(function (u) { return u.userId === userId; });
         if (!user) {
-            console.log("does not exist");
+            // console.log("does not exist");
         }
         else {
             if (user.userRole != "spectator") {

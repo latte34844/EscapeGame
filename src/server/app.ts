@@ -114,7 +114,6 @@ io.on("connection", (socket: socketIO.Socket) => {
         io.to(user.userId).emit("role", user.userRole);
         io.to(user.userId).emit("turn", game.getTurn(prisoner, warden));
 
-        console.log("send spectator");
       }
 
       io.to(warden.userId).emit(
@@ -122,7 +121,6 @@ io.on("connection", (socket: socketIO.Socket) => {
         game.getAvailableDirection(warden),
         "warden"
       );
-      console.log("send your turn");
     }
   });
 
@@ -280,7 +278,7 @@ io.on("connection", (socket: socketIO.Socket) => {
     (async () => {
       await game.delay(50);
 
-      game.resetRole(room);
+      // game.resetRole(room);
       game.setScore(room, 0, 0);
       let { oPositions, tPosition, pPosition, wPosition, hPosition } =
         game.restartGame(room);
@@ -312,6 +310,22 @@ io.on("connection", (socket: socketIO.Socket) => {
 
       io.to(prisoner.userId).emit("turn", game.getTurn(prisoner, warden));
       io.to(warden.userId).emit("turn", game.getTurn(prisoner, warden));
+
+      if (game.isYourTurn(prisoner)) {
+        io.to(prisoner.userId).emit(
+        "yourTurn",
+        game.getAvailableDirection(prisoner),
+        "prisoner"
+        );
+      } else if (game.isYourTurn(warden)) {
+        if (game.isYourTurn(warden)) {
+          io.to(warden.userId).emit(
+          "yourTurn",
+          game.getAvailableDirection(warden),
+          "warden"
+          );
+        }
+      }
 
       if (spectators) {
         game.rooms[room].spectators.forEach((spectator: any) => {

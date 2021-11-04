@@ -206,7 +206,6 @@ socket.on('clear', room => {
 const enterTURN = new Audio("musics/enterturn.mp3")
 enterTURN.volume = 0.3
 socket.on('yourTurn', (direction, role) => {
-    console.log('your turn')
     enterTURN.play()
     var counter = 11;
     let pastXY, curXY;

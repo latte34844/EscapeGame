@@ -9,7 +9,6 @@ const socket = io();
 socket.emit('admin')
 
 socket.on('population', (users)=>{
-    console.log(users)
     const players = users.filter(user => user.userRole != 'spectator')
     const div = document.createElement('div');
     const pop = document.querySelector('.population')
@@ -25,7 +24,6 @@ socket.on('adminRoom', rooms =>{
     roomsDiv.innerHTML = ''
    
     for (const roomName in rooms){
-        console.log(roomName)
         const div = document.createElement('div')
         div.className = "allRooms"
         div.innerHTML = `
