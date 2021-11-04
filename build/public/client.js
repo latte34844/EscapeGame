@@ -6,55 +6,55 @@ aud.volume = 0.1
 
 document.addEventListener('click', initAudio)
 
-function initAudio(){
+function initAudio() {
     aud.play()
     document.removeEventListener('click', initAudio)
 }
 
-$(document).ready(function() {
-    $('#cross').hide();		
+$(document).ready(function () {
+    $('#cross').hide();
     $("#navbar").animate({ "top": "0" }, 2000);
-   window.onbeforeunload = function () {
-       window.scrollTo(0, 0);
-   }
+    window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+    }
 
-   $('#menu').on('click',function(){
+    $('#menu').on('click', function () {
         $('.chatPanel').animate({ "opacity": 1 }, 'fast');
-        $('#menu').hide();	   
+        $('#menu').hide();
         $('#cross').show();
     });
-    $('#cross').on('click',function(){
+    $('#cross').on('click', function () {
         $('.chatPanel').animate({ "opacity": 0 }, 'fast');
-        $('#cross').hide();	   
+        $('#cross').hide();
         $('#menu').show();
     });
-}); 
-for(const control of document.querySelectorAll(".control")){
-    control.addEventListener("click", function(){
+});
+for (const control of document.querySelectorAll(".control")) {
+    control.addEventListener("click", function () {
         handleClick(this.getAttribute('id'))
     })
 }
 
-const handleClick = (controller)=>{
+const handleClick = (controller) => {
     move(controller)
 }
 
-socket.emit('joinRoom' , params.get('user'),params.get('room'));
+socket.emit('joinRoom', params.get('user'), params.get('room'));
 
 
-socket.on('pPosition', position =>{
+socket.on('pPosition', position => {
     setPposition(position)
 });
 
-socket.on('wPosition', position =>{
+socket.on('wPosition', position => {
     setWposition(position)
 })
 
-socket.on('oPositions', positions =>{
+socket.on('oPositions', positions => {
     setOpositions(positions)
 })
 
-socket.on('tPosition', position =>{
+socket.on('tPosition', position => {
     setTposition(position)
 })
 
@@ -62,13 +62,13 @@ socket.on('hPosition', position => {
     console.log('hidden treasure', position)
 })
 
-socket.on('greeting', greeting =>{
-    if(greeting === 'spectator'){
+socket.on('greeting', greeting => {
+    if (greeting === 'spectator') {
         sendActivity('The room is full.')
         sendActivity('You will be a spectator.')
-    }else{
-        sendActivity('Your role is '+ greeting+'.')
-    }  
+    } else {
+        sendActivity('Your role is ' + greeting + '.')
+    }
 })
 
 socket.on('role', role => {
@@ -83,8 +83,16 @@ socket.on('win', e => {
     sendActivity(e)
 })
 
-socket.on('foundTreasure', e =>{
+socket.on('foundTreasure', e => {
     sendActivity(e)
+})
+
+socket.on('sendMoveTunnelMsg', e => {
+    sendActivity(e)
+})
+
+socket.on('moveTunnel', position => {
+    changeTposition(position);
 })
 
 socket.on('direction', direction => {
@@ -111,8 +119,8 @@ function hide(id) {
 
 function sendActivity(message) {
     var item = document.createElement('li')
-    item.className="mchat"
-    item.style.color="rgb(139,236,108)"
+    item.className = "mchat"
+    item.style.color = "rgb(139,236,108)"
     item.textContent = message
     document.getElementById('messages').appendChild(item)
     scrollChatWindow()
@@ -141,11 +149,11 @@ socket.on('chat', message => {
 function addChat(message, mychat) {
     var item = document.createElement('li')
     if (mychat) {
-        item.className="mchat";
+        item.className = "mchat";
     } else {
-        item.className="chat";
+        item.className = "chat";
     }
-    item.textContent = message.from+": "+message.message
+    item.textContent = message.from + ": " + message.message
     document.getElementById('messages').appendChild(item)
     scrollChatWindow()
 }
@@ -154,7 +162,7 @@ const chatAudio = new Audio("./musics/POP1.mp3")
 chatAudio.volume = 0.5
 const playChatAudio = () => {
     chatAudio.play()
-    chatAudio.currentTime=0
+    chatAudio.currentTime = 0
 }
 
 const scrollChatWindow = () => {
@@ -172,13 +180,13 @@ const scrollChatWindow = () => {
 
 socket.on('clear', room => {
     const pXY = document.querySelector(".ppresentXY");
-    if(pXY !== null){
-        pXY.innerHTML= '';
+    if (pXY !== null) {
+        pXY.innerHTML = '';
         pXY.classList.remove('ppresentXY');
     }
     const wXY = document.querySelector(".wpresentXY");
-    if(wXY !== null){
-        wXY.innerHTML= '';
+    if (wXY !== null) {
+        wXY.innerHTML = '';
         wXY.classList.remove('wpresentXY');
     }
     const pastObstacles = document.querySelectorAll(".obstacle");
@@ -189,40 +197,40 @@ socket.on('clear', room => {
         })
     }
     const tXY = document.querySelector(".tunnel");
-    if(tXY !== null){
-        tXY.innerHTML= '';
+    if (tXY !== null) {
+        tXY.innerHTML = '';
         tXY.classList.remove('tunnel');
     }
 })
 
 const enterTURN = new Audio("musics/enterturn.mp3")
 enterTURN.volume = 0.3
-socket.on('yourTurn', (direction, role)=>{
+socket.on('yourTurn', (direction, role) => {
     console.log('your turn')
     enterTURN.play()
     var counter = 11;
-    let pastXY,curXY;
-    if(role == 'prisoner'){
+    let pastXY, curXY;
+    if (role == 'prisoner') {
         pastXY = document.querySelector(".ppresentXY").classList[2];
-    }else{
+    } else {
         pastXY = document.querySelector(".wpresentXY").classList[2];
     }
-    
+
     let arrayDir = [];
     console.log('start timer');
-    var interval = setInterval(function(){
-        if(role == 'prisoner'){
-            curXY = document.querySelector(".ppresentXY").classList[2]; 
-        }else{
-            curXY = document.querySelector(".wpresentXY").classList[2]; 
+    var interval = setInterval(function () {
+        if (role == 'prisoner') {
+            curXY = document.querySelector(".ppresentXY").classList[2];
+        } else {
+            curXY = document.querySelector(".wpresentXY").classList[2];
         }
         counter--;
         document.getElementById('timer').innerHTML = counter
-        if(pastXY != curXY) {
+        if (pastXY != curXY) {
             clearInterval(interval);
             document.getElementById('timer').innerHTML = "--"
         }
-        if (counter == 0 && (pastXY == curXY)){
+        if (counter == 0 && (pastXY == curXY)) {
             if (direction.right) arrayDir.push('right');
             if (direction.down) arrayDir.push('down');
             if (direction.up) arrayDir.push('up');
@@ -231,14 +239,14 @@ socket.on('yourTurn', (direction, role)=>{
             move(randomDir)
             clearInterval(interval);
         }
-        if(counter==0) {
+        if (counter == 0) {
             document.getElementById('timer').innerHTML = "--"
             clearInterval(interval);
         }
-    },1000)
+    }, 1000)
 })
 
-socket.on('turn',(e)=>{
+socket.on('turn', (e) => {
     document.getElementById('turn').innerHTML = e;
 })
 function show(id) {
@@ -249,50 +257,62 @@ function show(id) {
 const footStep = new Audio("musics/footstep.mp3")
 footStep.volume = 0.7
 
-const setPposition = (position) =>{
+const setPposition = (position) => {
     console.log('prisoner position', position);
     const pastXY = document.querySelector(".ppresentXY");
-    if(pastXY !== null){
-        pastXY.innerHTML= '';
+    if (pastXY !== null) {
+        pastXY.innerHTML = '';
         pastXY.classList.remove('ppresentXY');
         footStep.play()
     }
     const xy = document.querySelector("." + position);
     xy.classList.add('ppresentXY')
-    xy.innerHTML='<img class="prisonerImg" src="images/prisoner.png">';
+    xy.innerHTML = '<img class="prisonerImg" src="images/prisoner.png">';
 }
 
-const setWposition = (position) =>{
+const setWposition = (position) => {
     console.log('warden position', position);
     const pastXY = document.querySelector(".wpresentXY");
-    if(pastXY !== null){
-        pastXY.innerHTML= '';
+    if (pastXY !== null) {
+        pastXY.innerHTML = '';
         pastXY.classList.remove('wpresentXY');
         footStep.play()
     }
     const xy = document.querySelector("." + position);
     xy.classList.add('wpresentXY')
-    xy.innerHTML='<img class="wardenImg" src="images/warden.png">';
+    xy.innerHTML = '<img class="wardenImg" src="images/warden.png">';
     console.log('warden position ', xy);
-    setTimeout(function() {
+    setTimeout(function () {
         console.log('delay')
     }, 1000);
 }
 
-const setOpositions = (positions) =>{
+const setOpositions = (positions) => {
     console.log('obstacles position', positions)
-    positions.forEach(position =>{
+    positions.forEach(position => {
         const xy = document.querySelector("." + position);
         xy.classList.add('obstacle')
-        xy.innerHTML='<img class="obsatcleImg" src="images/obstacle.png">';
+        xy.innerHTML = '<img class="obsatcleImg" src="images/obstacle.png">';
     })
 }
 
-const setTposition = (position) =>{
+const setTposition = (position) => {
     console.log('tunnel position', position)
     const xy = document.querySelector("." + position);
     xy.classList.add('tunnel')
-    xy.innerHTML='<img class="tunnelImg" src="images/tunnel.png">';
+    xy.innerHTML = '<img class="tunnelImg" src="images/tunnel.png">';
+}
+
+const changeTposition = (position) => {
+    const tXY = document.querySelector(".tunnel");
+    if (tXY !== null) {
+        tXY.innerHTML = '';
+        tXY.classList.remove('tunnel');
+    }
+    console.log('tunnel position', position)
+    const xy = document.querySelector("." + position);
+    xy.classList.add('tunnel')
+    xy.innerHTML = '<img class="tunnelImg" src="images/tunnel.png">';
 }
 
 window.addEventListener('keydown', (e) => {
@@ -306,7 +326,7 @@ window.addEventListener('keydown', (e) => {
 }, true)
 
 const move = (controller) => {
-    socket.emit('movePosition',controller)
+    socket.emit('movePosition', controller)
     document.getElementById('timer').innerHTML = "--"
 }
 
@@ -315,21 +335,21 @@ const music = (e) => {
     const audio = document.getElementById("audio")
     switch (e) {
         case 1: {
-            source.setAttribute("src","./musics/music1.mp3")
+            source.setAttribute("src", "./musics/music1.mp3")
             hide("music1")
             show("music2")
             show("music3")
             break
         }
         case 2: {
-            source.setAttribute("src","./musics/music2.mp3")
+            source.setAttribute("src", "./musics/music2.mp3")
             show("music1")
             hide("music2")
             show("music3")
             break
         }
         case 3: {
-            source.setAttribute("src","./musics/music3.mp3")
+            source.setAttribute("src", "./musics/music3.mp3")
             show("music1")
             show("music2")
             hide("music3")
