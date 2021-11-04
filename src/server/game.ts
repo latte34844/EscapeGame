@@ -308,8 +308,10 @@ export class Game {
     while(true){
       this.removeTunnel(oldTunnel, room)
       this.createTunnel(room);
-      
-      if(oldTunnel !== this.rooms[room].tunnel){
+      const wPosition = this.rooms[room].warden;
+      const pPosition = this.rooms[room].prisoner;
+      let tPosition = this.rooms[room].tunnel;
+      if(tPosition !== oldTunnel && tPosition !== wPosition && tPosition !== pPosition){
         break;
       }
     }

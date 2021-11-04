@@ -303,7 +303,10 @@ var Game = /** @class */ (function () {
         while (true) {
             this.removeTunnel(oldTunnel, room);
             this.createTunnel(room);
-            if (oldTunnel !== this.rooms[room].tunnel) {
+            var wPosition = this.rooms[room].warden;
+            var pPosition = this.rooms[room].prisoner;
+            var tPosition = this.rooms[room].tunnel;
+            if (tPosition !== oldTunnel && tPosition !== wPosition && tPosition !== pPosition) {
                 break;
             }
         }

@@ -273,7 +273,6 @@ io.on("connection", function (socket) {
                         io.to(warden.userId).emit("direction", game.getAvailableDirection(warden));
                         io.to(prisoner.userId).emit("turn", game.getTurn(prisoner, warden));
                         io.to(warden.userId).emit("turn", game.getTurn(prisoner, warden));
-                        console.log(game.getTurn(prisoner, warden));
                         if (game.isYourTurn(prisoner)) {
                             io.to(prisoner.userId).emit("yourTurn", game.getAvailableDirection(prisoner), "prisoner");
                         }

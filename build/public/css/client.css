@@ -109,23 +109,28 @@ body{
 }
 
 .prisonerImg {
-  height: 90px;
-  width: 90px;
+  height: 80px;
+  width: 80px;
+  padding-top: 5px; 
 }
 
 .wardenImg {
-  height: 90px;
-  width: 90px;
+  height: 80px;
+  width: 80px;
+  padding-top: 5px;
 }
 
 .obsatcleImg {
-  height: 90px;
-  width: 90px;
+  height: 80px;
+  width: 80px;
+  padding-top: 10px;
+  margin-bottom: 0px;
 }
 
 .tunnelImg {
-  height: 90px;
-  width: 90px;
+  height: 80px;
+  width: 80px;
+  padding-top: 5px;
 }
 
 .btnImg {
