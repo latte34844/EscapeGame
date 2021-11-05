@@ -1,5 +1,13 @@
 # EscapeGamee
-
+- multi player game
+- implemented with socket.io and typeScript<br />
+## developed by<br />
+Natthakit Kitrueangphatchara 6238056021<br />
+Warit Leelaket 6238191021<br />
+Siraphop Thaisangsa-nga 6238220521<br />
+Naris Limpapaswat 6238100921<br />
+Panupong Vijakwichakorn 6238160521<br />
+# Start server on local
 start server with watch mode <br />
 -- any change in .js .html .ts files will restart the server --
 
