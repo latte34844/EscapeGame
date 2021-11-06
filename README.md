@@ -3,16 +3,20 @@
 - multi player game
 - implemented with socket.io and typeScript<br />
 - [notion.so](https://sulfuric-gondola-9de.notion.site/5ffc8294fe384b2ab79ce831365ef520?v=870d68682b724e5784f6ad3b332b8a5f)
-## developed by<br />
+## Developed by<br />
 Natthakit Kitrueangphatchara 6238056021<br />
 Warit Leelaket 6238191021<br />
 Siraphop Thaisangsa-nga 6238220521<br />
 Naris Limpapaswat 6238100921<br />
 Panupong Vijakwichakorn 6238160521<br />
+Group 8<br />
 ## Start server on local
+use this command once after pull
+``` 
+npm ci
+```
 start server with watch mode <br />
 -- any change in .js .html .ts files will restart the server --
-
 ``` 
 npm run dev 
 ```
